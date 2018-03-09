@@ -34,5 +34,4 @@ public class Wedge {
 	public int getTime(){
 		return time;
 	}
-
 }
