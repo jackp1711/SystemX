@@ -39,7 +39,8 @@ public class Timer {
 
     public void startTimer()
     {
-        startTime = System.currentTimeMillis();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        startTime = timestamp.getTime();
         timerOn = true;
     }
 

@@ -1,6 +1,6 @@
 import java.awt.FlowLayout;
 import java.util.ArrayList;
-/*
+
 import javax.swing.JFrame;
 
 import org.jfree.chart.ChartFactory;
@@ -11,6 +11,7 @@ import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.util.Rotation;
+import org.jfree.chart.ChartPanel;
 
 
 
@@ -19,12 +20,13 @@ public class JFrameGraphTest extends JFrame{
 	
 
 	private static final long serialVersionUID = 1L;
-	
+	private DBF db;
+
 	JFrame JFrame1 = new JFrame();
 	
 	ArrayList<Wedge> wedges = new ArrayList<Wedge>();
 	
-	private ChartPanel createPieChart(String chartTitle){
+	public ChartPanel createPieChart(String chartTitle){
 		System.out.println("PieChart");
 		fillData();
 		PieDataset dataset = createDataset();
@@ -40,10 +42,6 @@ public class JFrameGraphTest extends JFrame{
 		for(Wedge thisWedge: wedges){
 			data.setValue(thisWedge.getTitle(), thisWedge.getTime());
 		}
-
-		data.setValue("Site 1", 29);
-		data.setValue("Site 2", 5);
-		data.setValue("Site 3", 57);
 		return data;
 	}
 	
@@ -59,12 +57,12 @@ public class JFrameGraphTest extends JFrame{
 	}
 
 	public void fillData(){
-		ArrayList<String> stubTitles; //stubTitles to be populated by a database call
+		ArrayList<String> stubTitles = this.db.getStubTitles(); //stubTitles to be populated by a database call
 		for (String title: stubTitles){
 			double totalTime = 0;
 			//call database with parameter title
-			ArrayList<Double> stubTimes; //stubTime to be populated by a database call
-			for (Double time: stubTimes){
+			ArrayList<Integer> stubTimes = this.db.getTimes(title); //stubTime to be populated by a database call
+			for (Integer time: stubTimes){
 				totalTime += time;
 			}
 			wedges.add(new Wedge(title, totalTime));
@@ -73,23 +71,16 @@ public class JFrameGraphTest extends JFrame{
 	}
 	
 	
-	public JFrameGraphTest(){
-
-		String title = "System X";
+	public JFrameGraphTest(DBF db){
+		this.db = db;
+		/*String title = "System X";
 		JFrame1.setLayout(new FlowLayout());
 		JFrame1.setSize(1000,1000);
 		JFrame1.setLocationRelativeTo(null);
-		JFrame1.add(createPieChart(title));
+		JFrame1.add(createPieChart("TestChart"));
 		JFrame1.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		JFrame1.pack();
-		
+		*/
 	}
-	
-	public static void main(String[] args){
-		java.awt.EventQueue.invokeLater(new Runnable(){
-			public void run(){
-				new JFrameGraphTest().JFrame1.setVisible(true);
-			}
-		});
-	}
-}*/
+
+}

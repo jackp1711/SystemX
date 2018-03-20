@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Timestamp;
+import org.jfree.chart.ChartPanel;
 
 public class GUI {
     private JTabbedPane TabbedPannel;
@@ -13,17 +14,17 @@ public class GUI {
     private JComboBox lstCatergory;
     private JCheckBox chkEnableNotifications;
     private JButton btnSchedule;
-    private JLabel lbl1;
-    private JLabel lbl2;
     private JTextField dummyUrl;
 
     private DBF db;
     private Timer timer;
+    private JFrameGraphTest graphTest;
 
     private void createJframe() {
         JFrame frame = new JFrame();
             frame.setContentPane(PanelMain);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pnlMyStats.add(graphTest.createPieChart("TestChart"));
             frame.pack();
             frame.setVisible(true);
             frame.setTitle("ProjectX");
@@ -59,8 +60,8 @@ public class GUI {
         });
     }
 
-    public GUI(DBF db) {
-
+    public GUI(DBF db, JFrameGraphTest graphTest) {
+        this.graphTest = graphTest;
         this.db = db;
         this.timer = new Timer(db);
         this.createJframe();
@@ -68,6 +69,7 @@ public class GUI {
 
     public static void main(String[] args){
         DBF db = new DBF();
-        GUI gui = new GUI(db);
+        JFrameGraphTest graphTest = new JFrameGraphTest(db);
+        GUI gui = new GUI(db, graphTest);
     }
 }

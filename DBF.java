@@ -99,6 +99,10 @@ public class DBF {
 
     }
 
+    public ArrayList<String> getStubTitles() {
+        return this.getField("Site");
+    }
+
     public ArrayList<String> getField(String Field) {
 
         ArrayList<String> Titles = new ArrayList<String>();
