@@ -1,6 +1,6 @@
 import java.awt.FlowLayout;
 import java.util.ArrayList;
-
+/*
 import javax.swing.JFrame;
 
 import org.jfree.chart.ChartFactory;
@@ -17,9 +17,7 @@ import org.jfree.util.Rotation;
 
 public class JFrameGraphTest extends JFrame{
 	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	
 	JFrame JFrame1 = new JFrame();
@@ -94,4 +92,4 @@ public class JFrameGraphTest extends JFrame{
 			}
 		});
 	}
-}
+}*/

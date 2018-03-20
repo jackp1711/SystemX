@@ -44,7 +44,7 @@ public class writeToSQL {
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString(1, websiteName);
             preparedStmt.setString(2, elapsedMinutes + ":" + remainingSeconds );
-            preparedStmt.setDate(3, cal);
+            preparedStmt.setDate(3, new Date(1234561456)); //FIXME
             preparedStmt.setBoolean(4, productive);
 
             // execute the preparedstatement

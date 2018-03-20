@@ -17,11 +17,11 @@ public class DBF {
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite.PersonalData.db");
+            c = DriverManager.getConnection("jdbc:sqlite:PersonalData.db");
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
-            String sql = "CREATE TABLE TIME " +
+            String sql = "CREATE TABLE timer " +
                     "(StartTime         INT, " +
                     " EndTime           INT," +
                     " MyDate            DATE, " +
@@ -33,6 +33,7 @@ public class DBF {
             stmt.close();
             c.close();
         } catch ( Exception e ) {
+            e.printStackTrace();
             System.out.println("DB already initialized");
         }
         System.out.println("Table created successfully");
@@ -74,7 +75,7 @@ public class DBF {
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM TIME;" );
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM timer;" );
             while ( rs.next() ) {
                 int startTime = rs.getInt("StartTime");
                 int endTime = rs.getInt("EndTime");
@@ -110,7 +111,7 @@ public class DBF {
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM TIME;" );
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM timer;" );
             String nextEntity;
             while ( rs.next() ) {
                 nextEntity = rs.getString(Field);
@@ -141,7 +142,7 @@ public class DBF {
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT TimeSpent FROM TIME;" );
+            ResultSet rs = stmt.executeQuery( "SELECT TimeSpent FROM timer;" );
             while (rs.next()) {
 
                 Times.add(rs.getInt("TimeSpent"));
@@ -154,5 +155,9 @@ public class DBF {
 
         return (Times);
 
+    }
+
+    public static void main(String[] args){
+        DBF db = new DBF();
     }
 }
