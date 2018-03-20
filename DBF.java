@@ -3,11 +3,11 @@ import java.util.ArrayList;
 
 public class DBF {
 
-    public DBF(){
+    public DBF() {
         this.Create();
         //this.StoreData(1, 2, "32", 1, "work","me","www.fuckoff" );
         //this.GetData();
-        this.getField("Site");
+        //this.getField("Site");
         //this.getTimes("www.fuckoff");
     }
 
@@ -33,13 +33,13 @@ public class DBF {
             stmt.close();
             c.close();
         } catch ( Exception e ) {
-            e.printStackTrace();
+            //e.printStackTrace();
             System.out.println("DB already initialized");
         }
         System.out.println("Table created successfully");
     }
 
-    public void StoreData(int startTime,int endTime, String date, int time, String cat, String Source, String site){
+    public void storeData(long startTime, long endTime, String date, int timeSpent, String cat, String Source, String site){
         Connection c = null;
         Statement stmt = null;
 
@@ -50,8 +50,8 @@ public class DBF {
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
-            String sql = "INSERT INTO TIME (StartTime,EndTime,MyDate,TimeSpent,Category,Source,Site)" +
-                    "VALUES ("+startTime+","+endTime+", '"+date+"',"+time+",'"+cat+"','"+Source+"','"+site+"' );";
+            String sql = "INSERT INTO timer (StartTime,EndTime,MyDate,TimeSpent,Category,Source,Site)" +
+                    "VALUES ("+startTime+","+endTime+", '"+date+"',"+timeSpent+",'"+cat+"','"+Source+"','"+site+"' );";
             stmt.executeUpdate(sql);
 
             stmt.close();
@@ -159,5 +159,9 @@ public class DBF {
 
     public static void main(String[] args){
         DBF db = new DBF();
+    }
+
+    public void storeData(long startTime, long endTime, String url, String timer_gui) {
+        this.storeData(startTime, endTime, "WHY?", (int) (endTime - startTime) , "TODO", timer_gui, url);
     }
 }

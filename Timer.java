@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -25,9 +26,10 @@ public class Timer {
     public static ArrayList<Timer> historyOfUse = new ArrayList<>();
 
     private boolean timerOn;
-
-    public Timer()
+    private DBF db;
+    public Timer(DBF db)
     {
+        this.db = db;
         startTime = 0;
         timerOn = true;
 
@@ -64,9 +66,12 @@ public class Timer {
         remainingSeconds = elapsedSeconds % 60;
     }
 
-    public void stopTimer()
+    public void stopTimer(String url)
     {
         timerOn = false;
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        int ts = (int) timestamp.getTime();
 
         getTime();
         calcRealTime();
@@ -75,39 +80,15 @@ public class Timer {
         System.out.println("Minutes: " + elapsedMinutes);
         System.out.println("Seconds: " + remainingSeconds);
 
-        try
-        {
-            saveData();
-        }
-        catch (Exception e)
-        {
-            System.out.println("Data save failed");
-        }
+
+        saveData(startTime, ts, url);
     }
 
-    public void saveData() throws IOException
+    public void saveData(long startTime, long endTime, String url)
     {
-        System.out.println("What was the website name?");
+        System.out.println("Saving website: " + url);
 
-        website = br.readLine();
-
-        System.out.println("Was the website productive? Y/N");
-
-        productiveCheck(br.readLine());
-
-    }
-
-    public void productiveCheck(String s)
-    {
-        if (s.equals("Y"))
-        {
-            productive = true;
-        }
-
-        else if (s.equals("N"))
-        {
-            productive = false;
-        }
+        this.db.storeData(startTime, endTime, url, "TIMER GUI");
     }
 
     public long getStartTime()
@@ -154,7 +135,7 @@ public class Timer {
     {
         return historyOfUse.get(index);
     }
-
+/*
     public static void main(String[] args) throws IOException
     {
         Timer t = new Timer();
@@ -181,5 +162,5 @@ public class Timer {
 
 
         System.exit(0);
-    }
+    }*/
 }

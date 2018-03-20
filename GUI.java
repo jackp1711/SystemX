@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Timestamp;
 
 public class GUI {
     private JTabbedPane TabbedPannel;
@@ -14,43 +15,59 @@ public class GUI {
     private JButton btnSchedule;
     private JLabel lbl1;
     private JLabel lbl2;
+    private JTextField dummyUrl;
 
-    public GUI() {
+    private DBF db;
+    private Timer timer;
 
+    private void createJframe() {
         JFrame frame = new JFrame();
-        frame.setContentPane(PanelMain);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-        frame.setTitle("ProjectX");
+            frame.setContentPane(PanelMain);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.pack();
+            frame.setVisible(true);
+            frame.setTitle("ProjectX");
 
-        frame.setSize(600,500);
+            frame.setSize(600,500);
 
         //Start Button Code
-        btnStart.addActionListener(new ActionListener() {
+            btnStart.addActionListener(new ActionListener() {
             long startTime;
             long endTime;
             public void actionPerformed(ActionEvent e) {
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                int ts = (int) timestamp.getTime();
 
-                //When starting
-                if (btnStart.getText().equals("Start")){
-                    btnStart.setText("Stop");
-                    startTime = System.currentTimeMillis();
-                    System.out.println("Start Time: " + startTime);
-                    lstCatergory.setEnabled(false);
+                String url = dummyUrl.getText(); //Add textview for this
+                if (!url.equals("")) {
+                    //When starting
+                    if (btnStart.getText().equals("Start")){
+                        btnStart.setText("Stop");
+                        System.out.println("Start Time: " + ts);
+                        lstCatergory.setEnabled(false);
+                        timer.startTimer();
+                    }
+                    //When stopping
+                    else{
+                        btnStart.setText("Start");
+                        System.out.println("End Time: " + ts);
+                        timer.stopTimer(url);
+                        lstCatergory.setEnabled(true);
+                    }
                 }
-                //When stopping
-                else{
-                    btnStart.setText("Start");
-                    endTime = System.currentTimeMillis();
-                    System.out.println("End Time: " + endTime);
-                    System.out.println("Change in time: " + (endTime - startTime));
-                    lstCatergory.setEnabled(true);
-                }
-
-
             }
         });
     }
 
+    public GUI(DBF db) {
+
+        this.db = db;
+        this.timer = new Timer(db);
+        this.createJframe();
+    }
+
+    public static void main(String[] args){
+        DBF db = new DBF();
+        GUI gui = new GUI(db);
+    }
 }
