@@ -4,6 +4,13 @@ import java.awt.event.ActionListener;
 import java.sql.Timestamp;
 import org.jfree.chart.ChartPanel;
 
+import static spark.Spark.post;
+import static spark.Spark.get;
+import spark.Request;
+import spark.Response;
+import spark.Route;
+import spark.Spark;
+
 public class GUI {
     private JTabbedPane TabbedPannel;
     private JPanel PanelMain;
@@ -65,11 +72,36 @@ public class GUI {
         this.db = db;
         this.timer = new Timer(db);
         this.createJframe();
+        this.createTrackerListener();
+    }
+
+    private void createTrackerListener() {
+        post("/tracker", new Route() {
+            @Override
+            public Object handle(Request request, Response response) {
+                String message = request.queryParams("message");
+                String[] parts = message.split(" ");
+                if (parts.length == 3 || parts.length == 2) {
+                    int ts = Integer.parseInt(parts[0]);
+                    if (parts[1].equals("START")) {
+                        String url = parts[2];
+                        //timer.startTimer();
+                    } else {
+                        //stop
+                    }
+                }
+                System.out.println(message);
+                response.status(201); // 201 Created
+                return null;
+            }
+        });
     }
 
     public static void main(String[] args){
         DBF db = new DBF();
         JFrameGraphTest graphTest = new JFrameGraphTest(db);
+        //get("/hello", (req, res) -> "Hello World");
         GUI gui = new GUI(db, graphTest);
+
     }
 }
