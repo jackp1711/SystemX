@@ -98,17 +98,7 @@
             </constraints>
             <properties/>
             <border type="none"/>
-            <children>
-              <hspacer id="55036">
-                <constraints/>
-              </hspacer>
-              <hspacer id="6de9f">
-                <constraints/>
-              </hspacer>
-              <vspacer id="9f150">
-                <constraints/>
-              </vspacer>
-            </children>
+            <children/>
           </grid>
         </children>
       </tabbedpane>

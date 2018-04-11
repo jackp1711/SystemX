@@ -77,6 +77,7 @@ public class GUI {
         for (Category category : this.db.getCategories()) {
             JTextField textField = new JTextField();
             textField.setText(category.getTitle());
+            textField.setColumns(50);
             textField.getDocument().addDocumentListener(new DocumentListener() {
                 public void changedUpdate(DocumentEvent e) {
                     saveChangedCategory();
@@ -102,6 +103,7 @@ public class GUI {
             });
             panelCategories.add(textField);
         }
+        panelCategories.repaint();
     }
 
     private void createTrackerListener() {
