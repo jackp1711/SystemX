@@ -116,4 +116,30 @@ public class DBF {
         }
         return null;
     }
+
+    public ArrayList<Category> getGroupedCategoriesSinceTime(int time) {
+        ArrayList<Category> categoriesList = new ArrayList<>();
+        try {
+            String query = "select category.title, sum(timerentry.duration) from main.timerentry left join url on url.title = timerentry.url_id left join category on url.category_id = category.id where timerentry.start > ? group by category.title;";
+
+            GenericRawResults<Category> results = this.categoryDao.queryRaw(query, new RawRowMapper<Category>() {
+                @Override
+                public Category mapRow(String[] columnNames, String[] resultColumns) throws SQLException {
+                    Category c = new Category();
+                    c.setTitle(resultColumns[0] != null ? resultColumns[0] : "Others");
+                    c.setDuration(Integer.parseInt(resultColumns[1]));
+                    return c;
+                }
+            }, "" + time);
+            for (Category category : results) {
+                categoriesList.add(category);
+                System.out.println(category);
+            }
+            return categoriesList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Could not retrieve groupped categories");
+        }
+        return null;
+    }
 }
