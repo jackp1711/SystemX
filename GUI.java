@@ -38,8 +38,6 @@ public class GUI {
 
         //Start Button Code
             btnStart.addActionListener(new ActionListener() {
-            long startTime;
-            long endTime;
             public void actionPerformed(ActionEvent e) {
                 String url = dummyUrl.getText(); //Add textview for this
                 if (!url.equals("")) {

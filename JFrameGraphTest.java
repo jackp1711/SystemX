@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
+import Models.TimerEntry;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -57,17 +58,10 @@ public class JFrameGraphTest extends JFrame{
 	}
 
 	public void fillData(){
-		ArrayList<String> stubTitles = this.db.getStubTitles(); //stubTitles to be populated by a database call
-		for (String title: stubTitles){
-			double totalTime = 0;
-			//call database with parameter title
-			ArrayList<Integer> stubTimes = this.db.getTimes(title); //stubTime to be populated by a database call
-			for (Integer time: stubTimes){
-				totalTime += time;
-			}
-			wedges.add(new Wedge(title, totalTime));
+		ArrayList<TimerEntry> timerEntries = this.db.getEntriesSinceTime(0); //stubTitles to be populated by a database call
+		for (TimerEntry timerEntry : timerEntries){
+			wedges.add(new Wedge(timerEntry.getUrl().getTitle(), timerEntry.getDuration()));
 		}
-		
 	}
 	
 	
