@@ -1,93 +1,66 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
 
 public class Timer {
 
     private long startTime;
-    private long elapsedTime;
-
-    private long elapsedSeconds;
-
-    private long elapsedMinutes;
-    private long remainingSeconds;
-
-    private String website;
-    private boolean productive;
-
-    InputStreamReader ir = new InputStreamReader(System.in);
-    BufferedReader br = new BufferedReader(ir);
-
-    private Calendar cal;
-
-    public static ArrayList<Timer> historyOfUse = new ArrayList<>();
-
     private boolean timerOn;
+
+    private String url;
+
     private DBF db;
-    public Timer(DBF db)
-    {
+
+    public Timer(DBF db) {
         this.db = db;
-        startTime = 0;
-        timerOn = true;
-
-        cal = Calendar.getInstance();
     }
 
-
-    public void startTimer()
-    {
+    private long getCurrentTimestamp() {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        startTime = timestamp.getTime();
+        return timestamp.getTime();
+    }
+
+    public void startTimer() {
+        startTime = getCurrentTimestamp();
         timerOn = true;
     }
 
-    public void getTime()
+    public void startTimer(String url)
     {
-        elapsedTime = System.currentTimeMillis() - startTime;
-
+        this.url = url;
+        this.startTimer();
     }
 
-    public void calcRealTime()
-    {
-        calcSeconds();
-        calcMinutesAndSeconds();
+    public void startTimer(String url, int startTime) {
+        this.stopTimer();
+        this.startTimer(url);
+        this.startTime = startTime;
     }
 
-    public void calcSeconds()
-    {
-        elapsedSeconds = elapsedTime / 1000;
+    public void stopTimer(String url) {
+        this.url = url;
+        this.stopTimer();
     }
 
-    public void calcMinutesAndSeconds()
-    {
-        elapsedMinutes = elapsedSeconds / 60;
-        remainingSeconds = elapsedSeconds % 60;
+    public void stopTimer() {
+        long now = this.getCurrentTimestamp();
+        stopTimer(now);
     }
 
-    public void stopTimer(String url)
-    {
-        timerOn = false;
+    public void stopTimer(long endTime) {
+        if (timerOn && startTime >= 0) { //check if timer is running
+            saveData(startTime, endTime, url);
 
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        int ts = (int) timestamp.getTime();
+            //reset timer
+            this.timerOn = false;
+            this.startTime = 0;
+        } else {
+            System.err.println("Tried to stop timer when it was not running");
+        }
 
-        getTime();
-        calcRealTime();
-
-        System.out.println("Total Time: " + elapsedSeconds + " seconds");
-        System.out.println("Minutes: " + elapsedMinutes);
-        System.out.println("Seconds: " + remainingSeconds);
-
-
-        saveData(startTime, ts, url);
     }
 
     public void saveData(long startTime, long endTime, String url)
     {
-        System.out.println("Saving website: " + url);
+        System.out.println("Saving website: " + url + " duration: " + (endTime - startTime));
 
         this.db.storeData(startTime, endTime, url, "TIMER GUI");
     }
@@ -96,72 +69,4 @@ public class Timer {
     {
         return startTime;
     }
-
-    public long getElapsedTime()
-    {
-        return elapsedTime;
-    }
-
-    public long getElapsedSeconds()
-    {
-        return elapsedSeconds;
-    }
-
-    public long getRemainingSeconds()
-    {
-        return remainingSeconds;
-    }
-
-    public long getElapsedMinutes()
-    {
-        return elapsedMinutes;
-    }
-
-    public Calendar getCurrentDate()
-    {
-        return cal;
-    }
-
-    public boolean getProductive()
-    {
-        return productive;
-    }
-
-    public String getWebsite()
-    {
-        return website;
-    }
-
-    public Timer getHistory(int index)
-    {
-        return historyOfUse.get(index);
-    }
-/*
-    public static void main(String[] args) throws IOException
-    {
-        Timer t = new Timer();
-
-
-        while(t.timerOn)
-        {
-            String s = t.br.readLine();
-
-            if (s.equals("Start"))
-            {
-                t.startTimer();
-            }
-
-            else if (s.equals("Stop"))
-            {
-                t.stopTimer();
-
-                historyOfUse.add(t);
-            }
-        }
-
-        writeToSQL saveData = new writeToSQL(t);
-
-
-        System.exit(0);
-    }*/
 }
