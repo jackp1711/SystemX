@@ -78,9 +78,9 @@ public class GUI {
                     int ts = Integer.parseInt(parts[0]);
                     if (parts[1].equals("START")) {
                         String url = parts[2];
-                        //timer.startTimer();
+                        timer.startTimer(url, ts);
                     } else {
-                        //stop
+                        timer.stopTimer(ts);
                     }
                 }
                 System.out.println(message);

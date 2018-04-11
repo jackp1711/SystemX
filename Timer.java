@@ -29,15 +29,25 @@ public class Timer {
         this.startTimer();
     }
 
+    public void startTimer(String url, int startTime) {
+        this.stopTimer();
+        this.startTimer(url);
+        this.startTime = startTime;
+    }
+
     public void stopTimer(String url) {
         this.url = url;
         this.stopTimer();
     }
 
     public void stopTimer() {
+        long now = this.getCurrentTimestamp();
+        stopTimer(now);
+    }
+
+    public void stopTimer(long endTime) {
         if (timerOn && startTime >= 0) { //check if timer is running
-            long now = this.getCurrentTimestamp();
-            saveData(startTime, now, url);
+            saveData(startTime, endTime, url);
 
             //reset timer
             this.timerOn = false;
