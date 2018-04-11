@@ -1,8 +1,6 @@
-import java.sql.Timestamp;
-
 public class Timer {
 
-    private long startTime;
+    private int startTime;
     private boolean timerOn;
 
     private String url;
@@ -13,9 +11,8 @@ public class Timer {
         this.db = db;
     }
 
-    private long getCurrentTimestamp() {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        return timestamp.getTime();
+    private int getCurrentTimestamp() {
+        return (int) (System.currentTimeMillis() / 1000);
     }
 
     public void startTimer() {
@@ -41,11 +38,11 @@ public class Timer {
     }
 
     public void stopTimer() {
-        long now = this.getCurrentTimestamp();
+        int now = this.getCurrentTimestamp();
         stopTimer(now);
     }
 
-    public void stopTimer(long endTime) {
+    public void stopTimer(int endTime) {
         if (timerOn && startTime >= 0) { //check if timer is running
             saveData(startTime, endTime, url);
 
@@ -58,14 +55,14 @@ public class Timer {
 
     }
 
-    public void saveData(long startTime, long endTime, String url)
+    public void saveData(int startTime, int endTime, String url)
     {
         System.out.println("Saving website: " + url + " duration: " + (endTime - startTime));
 
-        this.db.storeData(startTime, endTime, url, "TIMER GUI");
+        this.db.storeData(startTime, endTime, url);
     }
 
-    public long getStartTime()
+    public int getStartTime()
     {
         return startTime;
     }
