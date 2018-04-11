@@ -41,22 +41,17 @@ public class GUI {
             long startTime;
             long endTime;
             public void actionPerformed(ActionEvent e) {
-                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-                int ts = (int) timestamp.getTime();
-
                 String url = dummyUrl.getText(); //Add textview for this
                 if (!url.equals("")) {
                     //When starting
                     if (btnStart.getText().equals("Start")){
                         btnStart.setText("Stop");
-                        System.out.println("Start Time: " + ts);
                         lstCatergory.setEnabled(false);
                         timer.startTimer();
                     }
                     //When stopping
                     else{
                         btnStart.setText("Start");
-                        System.out.println("End Time: " + ts);
                         timer.stopTimer(url);
                         lstCatergory.setEnabled(true);
                     }
