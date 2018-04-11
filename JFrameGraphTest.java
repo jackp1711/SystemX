@@ -58,7 +58,7 @@ public class JFrameGraphTest extends JFrame{
 	}
 
 	public void fillData(){
-		ArrayList<TimerEntry> timerEntries = this.db.getEntriesSinceTime(0); //stubTitles to be populated by a database call
+		ArrayList<TimerEntry> timerEntries = this.db.getGroupedEntriesSinceTime(0); //stubTitles to be populated by a database call
 		for (TimerEntry timerEntry : timerEntries){
 			wedges.add(new Wedge(timerEntry.getUrl().getTitle(), timerEntry.getDuration()));
 		}

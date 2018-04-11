@@ -12,6 +12,7 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DBF {
 
@@ -74,7 +75,18 @@ public class DBF {
         return null;
     }
 
-    public ArrayList<TimerEntry> getEntriesSinceTime(int time) {
+    public List<TimerEntry> getEntriesSinceTime(int time) {
+        try {
+            QueryBuilder<TimerEntry, String> queryBuilder = timerEntryDao.queryBuilder();
+            queryBuilder.where().gt("start", time);
+            return queryBuilder.query();
+        } catch (SQLException e) {
+            System.err.println("Could not retrieve data");
+        }
+        return null;
+    }
+
+    public ArrayList<TimerEntry> getGroupedEntriesSinceTime(int time) {
         ArrayList<TimerEntry> timerEntryList = new ArrayList<>();
 
         try {
