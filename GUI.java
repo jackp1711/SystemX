@@ -1,7 +1,12 @@
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.sql.Timestamp;
+
+import Models.Category;
 import org.jfree.chart.ChartPanel;
 
 import static spark.Spark.post;
@@ -20,6 +25,7 @@ public class GUI {
     private JCheckBox chkEnableNotifications;
     private JButton btnSchedule;
     private JTextField dummyUrl;
+    private JPanel panelCategories;
 
     private DBF db;
     private Timer timer;
@@ -62,8 +68,40 @@ public class GUI {
         this.graphTest = graphTest;
         this.db = db;
         this.timer = new Timer(db);
-        this.createJframe();
         this.createTrackerListener();
+        this.createJframe();
+        this.createGroupsPanel();
+    }
+
+    private void createGroupsPanel() {
+        for (Category category : this.db.getCategories()) {
+            JTextField textField = new JTextField();
+            textField.setText(category.getTitle());
+            textField.getDocument().addDocumentListener(new DocumentListener() {
+                public void changedUpdate(DocumentEvent e) {
+                    saveChangedCategory();
+                }
+
+                public void removeUpdate(DocumentEvent e) {
+                    saveChangedCategory();
+                }
+                public void insertUpdate(DocumentEvent e) {
+                    saveChangedCategory();
+                }
+
+                public void saveChangedCategory() {
+                    if (textField.getText().length()>0) {
+                        category.setTitle(textField.getText());
+                        try {
+                            db.categoryDao.update(category);
+                        } catch (SQLException e) {
+                            System.err.println("Could not update category " + category.getTitle());
+                        }
+                    }
+                }
+            });
+            panelCategories.add(textField);
+        }
     }
 
     private void createTrackerListener() {
