@@ -117,6 +117,19 @@ public class DBF {
         return null;
     }
 
+    public void deleteCategory(Category category) {
+        try {
+            List<Url> urls = this.urlDao.queryForEq("category_id", category.getId());
+            for(Url url : urls) {
+                url.setCategory(null);
+                this.urlDao.update(url);
+            }
+            this.categoryDao.delete(category);
+        } catch (SQLException ex) {
+            System.err.println("Could not delete category " + category);
+        }
+    }
+
     public List<Category> getCategories() {
         try {
             return this.categoryDao.queryForAll();

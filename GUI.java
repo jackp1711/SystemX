@@ -86,11 +86,7 @@ public class GUI {
                     if (dialogResult == JOptionPane.YES_OPTION) {
                         // Saving code here
                         System.out.println("DELETING " + category);
-                        try {
-                            db.categoryDao.delete(category);
-                        } catch (SQLException ex) {
-                            System.err.println("Could not delete category " + category);
-                        }
+                        db.deleteCategory(category);
                     }
                 }
             });
