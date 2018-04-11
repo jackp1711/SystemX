@@ -96,8 +96,10 @@
             <constraints>
               <tabbedpane title="Categories"/>
             </constraints>
-            <properties/>
-            <border type="none"/>
+            <properties>
+              <enabled value="true"/>
+            </properties>
+            <border type="none" title=""/>
             <children/>
           </grid>
         </children>

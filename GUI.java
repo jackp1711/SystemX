@@ -104,6 +104,33 @@ public class GUI {
             panelCategories.add(textField);
         }
         panelCategories.repaint();
+
+        this.createAddGroupView(panelCategories);
+    }
+
+    private void createAddGroupView(JPanel panel) {
+        JTextField textField = new JTextField();
+        textField.setColumns(30);
+        JButton button = new JButton();
+        button.setText("Create group");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Category category = new Category(textField.getText());
+                try {
+                    db.categoryDao.createOrUpdate(category);
+
+                    //reset view
+                    textField.setText("");
+                    //createGroupsPanel();
+                    //TODO - after this is done, reset the categories view (redraw using fresh database query)
+                } catch (SQLException ex) {
+                    System.err.println("Could not create category " + textField.getText());
+                }
+            }
+        });
+        panel.add(textField);
+        panel.add(button);
     }
 
     private void createTrackerListener() {
