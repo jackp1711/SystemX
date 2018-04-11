@@ -5,11 +5,9 @@ import java.sql.Timestamp;
 import org.jfree.chart.ChartPanel;
 
 import static spark.Spark.post;
-import static spark.Spark.get;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-import spark.Spark;
 
 public class GUI {
     private JTabbedPane TabbedPannel;
@@ -100,8 +98,6 @@ public class GUI {
     public static void main(String[] args){
         DBF db = new DBF();
         JFrameGraphTest graphTest = new JFrameGraphTest(db);
-        //get("/hello", (req, res) -> "Hello World");
         GUI gui = new GUI(db, graphTest);
-
     }
 }

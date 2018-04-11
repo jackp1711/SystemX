@@ -136,32 +136,5 @@ public class Timer {
     {
         return historyOfUse.get(index);
     }
-/*
-    public static void main(String[] args) throws IOException
-    {
-        Timer t = new Timer();
 
-
-        while(t.timerOn)
-        {
-            String s = t.br.readLine();
-
-            if (s.equals("Start"))
-            {
-                t.startTimer();
-            }
-
-            else if (s.equals("Stop"))
-            {
-                t.stopTimer();
-
-                historyOfUse.add(t);
-            }
-        }
-
-        writeToSQL saveData = new writeToSQL(t);
-
-
-        System.exit(0);
-    }*/
 }
