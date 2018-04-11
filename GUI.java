@@ -76,8 +76,27 @@ public class GUI {
     private void createGroupsPanel() {
         for (Category category : this.db.getCategories()) {
             JTextField textField = new JTextField();
+            JButton deleteButton = new JButton();
+            deleteButton.setText("DELETE");
+
+            deleteButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete category " + category.getTitle() + "?", "Delete category", JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        // Saving code here
+                        System.out.println("DELETING " + category);
+                        try {
+                            db.categoryDao.delete(category);
+                        } catch (SQLException ex) {
+                            System.err.println("Could not delete category " + category);
+                        }
+                    }
+                }
+            });
+
             textField.setText(category.getTitle());
-            textField.setColumns(50);
+            textField.setColumns(40);
             textField.getDocument().addDocumentListener(new DocumentListener() {
                 public void changedUpdate(DocumentEvent e) {
                     saveChangedCategory();
@@ -102,6 +121,7 @@ public class GUI {
                 }
             });
             panelCategories.add(textField);
+            panelCategories.add(deleteButton);
         }
         panelCategories.repaint();
 
