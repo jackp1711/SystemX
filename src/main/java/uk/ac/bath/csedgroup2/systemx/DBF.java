@@ -19,9 +19,9 @@ import java.util.List;
 public class DBF {
 
     private static final String DB_SOURCE = "jdbc:sqlite:TrackerDatabase.sqlite";
-    public Dao<Url, String> urlDao;
-    public Dao<Category, String> categoryDao;
-    public Dao<TimerEntry, String> timerEntryDao;
+    public static Dao<Url, String> urlDao;
+    public static Dao<Category, String> categoryDao;
+    public static Dao<TimerEntry, String> timerEntryDao;
 
     public DBF() {
         this.startup();
@@ -30,9 +30,9 @@ public class DBF {
     public void startup() {
         try {
             ConnectionSource connectionSource = new JdbcConnectionSource(DBF.DB_SOURCE);
-            this.urlDao = DaoManager.createDao(connectionSource, Url.class);
-            this.categoryDao = DaoManager.createDao(connectionSource, Category.class);
-            this.timerEntryDao = DaoManager.createDao(connectionSource, TimerEntry.class);
+            urlDao = DaoManager.createDao(connectionSource, Url.class);
+            categoryDao = DaoManager.createDao(connectionSource, Category.class);
+            timerEntryDao = DaoManager.createDao(connectionSource, TimerEntry.class);
 
             TableUtils.createTable(connectionSource, Url.class);
             TableUtils.createTable(connectionSource, Category.class);
@@ -46,14 +46,14 @@ public class DBF {
         System.out.println("trying to store " + start + " " + end + " " + website);
         Url url = null;
         try {
-            url = this.urlDao.queryForId(website);
+            url = urlDao.queryForId(website);
         } catch (SQLException e) {
             System.err.println("Url could not be fetched from database, create a new one");
         }
         if (url == null) {
             Url newUrl = new Url(website, null);
             try {
-                this.urlDao.create(newUrl);
+                urlDao.create(newUrl);
                 url = newUrl;
             } catch (SQLException ex) {
                 System.err.println("Could not save url to database");
@@ -64,7 +64,7 @@ public class DBF {
             TimerEntry timerEntry = new TimerEntry(url, start, end, (int) (end - start));
 
             try {
-                this.timerEntryDao.create(timerEntry);
+                timerEntryDao.create(timerEntry);
                 return timerEntry;
             } catch (SQLException e) {
                 System.err.println("Could not save time entry to database");
@@ -93,7 +93,7 @@ public class DBF {
             queryBuilder.groupBy("url_id");
             queryBuilder.where().gt("start", time);
 
-            GenericRawResults<TimerEntry> results = this.timerEntryDao.queryRaw(queryBuilder.prepareStatementString(), new RawRowMapper<TimerEntry>() {
+            GenericRawResults<TimerEntry> results = timerEntryDao.queryRaw(queryBuilder.prepareStatementString(), new RawRowMapper<TimerEntry>() {
                 @Override
                 public TimerEntry mapRow(String[] columnNames, String[] resultColumns) throws SQLException {
                     TimerEntry t = new TimerEntry();
@@ -115,12 +115,12 @@ public class DBF {
 
     public void deleteCategory(Category category) {
         try {
-            List<Url> urls = this.urlDao.queryForEq("category_id", category.getId());
+            List<Url> urls = urlDao.queryForEq("category_id", category.getId());
             for(Url url : urls) {
                 url.setCategory(null);
-                this.urlDao.update(url);
+                urlDao.update(url);
             }
-            this.categoryDao.delete(category);
+            categoryDao.delete(category);
         } catch (SQLException ex) {
             System.err.println("Could not delete category " + category);
         }
@@ -128,7 +128,7 @@ public class DBF {
 
     public List<Category> getCategories() {
         try {
-            return this.categoryDao.queryForAll();
+            return categoryDao.queryForAll();
         } catch (SQLException e) {
             System.err.println("Could not query for all categories");
         }
@@ -140,7 +140,7 @@ public class DBF {
         try {
             String query = "select category.title, sum(timerentry.duration) from main.timerentry left join url on url.title = timerentry.url_id left join category on url.category_id = category.id where timerentry.start > ? group by category.title;";
 
-            GenericRawResults<Category> results = this.categoryDao.queryRaw(query, new RawRowMapper<Category>() {
+            GenericRawResults<Category> results = categoryDao.queryRaw(query, new RawRowMapper<Category>() {
                 @Override
                 public Category mapRow(String[] columnNames, String[] resultColumns) throws SQLException {
                     Category c = new Category();

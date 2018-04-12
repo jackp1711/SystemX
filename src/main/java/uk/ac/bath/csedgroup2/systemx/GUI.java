@@ -2,23 +2,18 @@ package uk.ac.bath.csedgroup2.systemx;
 
 import spark.Request;
 import spark.Response;
-import spark.Route;
 import uk.ac.bath.csedgroup2.systemx.models.Category;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.SQLException;
 
 import static spark.Spark.post;
 
 public class GUI {
-    private JTabbedPane TabbedPannel;
-    private JPanel PanelMain;
+    private JTabbedPane tabbedPannel;
+    private JPanel panelMain;
     private JPanel pnlMainMenu;
     private JPanel pnlMyStats;
     private JPanel pnlSettings;
@@ -35,12 +30,12 @@ public class GUI {
 
     private void createJframe() {
         JFrame frame = new JFrame();
-        frame.setContentPane(PanelMain);
+        frame.setContentPane(panelMain);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        TabbedPannel.addChangeListener((e) -> {
+        tabbedPannel.addChangeListener(e -> {
             // 0 = Main, 1 = Stats, 2 = Settings, 3 = Categories
-            if (TabbedPannel.getSelectedIndex() == 1) {
+            if (tabbedPannel.getSelectedIndex() == 1) {
                 pnlMyStats.removeAll();
                 pnlMyStats.add(graphTest.redraw());
             }
@@ -53,7 +48,7 @@ public class GUI {
         frame.setSize(600,500);
 
         //Start Button
-        btnStart.addActionListener((e) -> {
+        btnStart.addActionListener(e -> {
             String url = dummyUrl.getText(); //Add textview for this
             if (!"".equals(url)) {
                 //When starting
@@ -89,16 +84,13 @@ public class GUI {
             JButton deleteButton = new JButton();
             deleteButton.setText("DELETE");
 
-            deleteButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete category " + category.getTitle() + "?", "Delete category", JOptionPane.YES_NO_OPTION);
-                    if (dialogResult == JOptionPane.YES_OPTION) {
-                        // Saving code here
-                        db.deleteCategory(category);
-                        //redraw categories again
-                        createGroupsPanel();
-                    }
+            deleteButton.addActionListener(e-> {
+                int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete category " + category.getTitle() + "?", "Delete category", JOptionPane.YES_NO_OPTION);
+                if (dialogResult == JOptionPane.YES_OPTION) {
+                    // Saving code here
+                    db.deleteCategory(category);
+                    //redraw categories again
+                    createGroupsPanel();
                 }
             });
 
@@ -140,7 +132,7 @@ public class GUI {
         textField.setColumns(30);
         JButton button = new JButton();
         button.setText("Create group");
-        button.addActionListener((e) -> {
+        button.addActionListener(e -> {
             Category category = new Category(textField.getText());
             try {
                 db.categoryDao.createOrUpdate(category);

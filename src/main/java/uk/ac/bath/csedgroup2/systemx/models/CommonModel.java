@@ -1,8 +1,12 @@
 package uk.ac.bath.csedgroup2.systemx.models;
 
+import java.util.Random;
+
 abstract class CommonModel {
 
     private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    private CommonModel() { }
 
     public static String generateId () {
         return randomAlphaNumeric(12);
@@ -10,8 +14,10 @@ abstract class CommonModel {
 
     public static String randomAlphaNumeric(int length) {
         StringBuilder builder = new StringBuilder();
-        while (length-- != 0) {
-            int character = (int)(Math.random()*ALPHA_NUMERIC_STRING.length());
+        int i = length;
+        while (i-- != 0) {
+            int next = (new Random()).nextInt();
+            int character = next*ALPHA_NUMERIC_STRING.length();
             builder.append(ALPHA_NUMERIC_STRING.charAt(character));
         }
         return builder.toString();
