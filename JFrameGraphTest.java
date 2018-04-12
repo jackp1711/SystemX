@@ -19,31 +19,33 @@ import org.jfree.chart.ChartPanel;
 
 
 public class JFrameGraphTest extends JFrame{
-	
 
 	private static final long serialVersionUID = 1L;
 	private DBF db;
 
 	JFrame JFrame1 = new JFrame();
-	
-	ArrayList<Wedge> wedges = new ArrayList<Wedge>();
-	
+
+	public ChartPanel redraw() {
+		return createPieChart("You suck");
+	}
+
 	public ChartPanel createPieChart(String chartTitle){
 		System.out.println("PieChart");
-		fillData();
 		PieDataset dataset = createDataset();
 		JFreeChart chart = createChart(dataset, chartTitle);
 		ChartPanel chartPanel = new ChartPanel(chart);
 		return chartPanel;
-		}
+	}
 	
 	private PieDataset createDataset(){
 		System.out.println("PieDataset");
 		DefaultPieDataset data = new DefaultPieDataset();
-		
-		for(Wedge thisWedge: wedges){
-			data.setValue(thisWedge.getTitle(), thisWedge.getTime());
+
+		ArrayList<Category> categoryArrayList = this.db.getGroupedCategoriesSinceTime(0);
+		for (Category category : categoryArrayList) {
+			data.setValue(category.getTitle(), category.getDuration());
 		}
+
 		return data;
 	}
 	
@@ -58,28 +60,7 @@ public class JFrameGraphTest extends JFrame{
 		return chart;
 	}
 
-	public void fillData(){
-		/*ArrayList<TimerEntry> timerEntries = this.db.getGroupedEntriesSinceTime(0); //stubTitles to be populated by a database call
-		for (TimerEntry timerEntry : timerEntries){
-			wedges.add(new Wedge(timerEntry.getUrl().getTitle(), timerEntry.getDuration()));
-		}*/
-		ArrayList<Category> categoryArrayList = this.db.getGroupedCategoriesSinceTime(0);
-		for (Category category : categoryArrayList) {
-		    wedges.add(new Wedge(category.getTitle(), category.getDuration()));
-        }
-	}
-	
-	
 	public JFrameGraphTest(DBF db){
 		this.db = db;
-		/*String title = "System X";
-		JFrame1.setLayout(new FlowLayout());
-		JFrame1.setSize(1000,1000);
-		JFrame1.setLocationRelativeTo(null);
-		JFrame1.add(createPieChart("TestChart"));
-		JFrame1.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		JFrame1.pack();
-		*/
 	}
-
 }

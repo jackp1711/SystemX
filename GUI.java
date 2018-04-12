@@ -1,10 +1,14 @@
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import java.sql.SQLException;
-import java.sql.Timestamp;
+
 
 import Models.Category;
 import org.jfree.chart.ChartPanel;
@@ -33,17 +37,28 @@ public class GUI {
 
     private void createJframe() {
         JFrame frame = new JFrame();
-            frame.setContentPane(PanelMain);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pnlMyStats.add(graphTest.createPieChart("TestChart"));
-            frame.pack();
-            frame.setVisible(true);
-            frame.setTitle("ProjectX");
+        frame.setContentPane(PanelMain);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //pnlMyStats.add(graphTest.createPieChart("TestChart"));
+        TabbedPannel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                // 0 = Main, 1 = Stats, 2 = Settings, 3 = Categories
+                if (TabbedPannel.getSelectedIndex() == 1) {
+                    pnlMyStats.removeAll();
+                    pnlMyStats.add(graphTest.redraw());
+                }
+                System.out.println("Tab: " + TabbedPannel.getSelectedIndex());
+            }
+        });
 
-            frame.setSize(600,500);
+        frame.pack();
+        frame.setVisible(true);
+        frame.setTitle("ProjectX");
 
-        //Start Button Code
-            btnStart.addActionListener(new ActionListener() {
+        frame.setSize(600,500);
+
+        //Start Button
+        btnStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String url = dummyUrl.getText(); //Add textview for this
                 if (!url.equals("")) {
