@@ -8,10 +8,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import java.sql.SQLException;
-
-
-import Models.Category;
-import org.jfree.chart.ChartPanel;
+import models.Category;
 
 import static spark.Spark.post;
 import spark.Request;
@@ -39,7 +36,7 @@ public class GUI {
         JFrame frame = new JFrame();
         frame.setContentPane(PanelMain);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //pnlMyStats.add(graphTest.createPieChart("TestChart"));
+
         TabbedPannel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 // 0 = Main, 1 = Stats, 2 = Settings, 3 = Categories
@@ -61,7 +58,7 @@ public class GUI {
         btnStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String url = dummyUrl.getText(); //Add textview for this
-                if (!url.equals("")) {
+                if (!"".equals(url)) {
                     //When starting
                     if (btnStart.getText().equals("Start")){
                         btnStart.setText("Stop");
@@ -192,6 +189,6 @@ public class GUI {
     public static void main(String[] args){
         DBF db = new DBF();
         JFrameGraphTest graphTest = new JFrameGraphTest(db);
-        GUI gui = new GUI(db, graphTest);
+        new GUI(db, graphTest);
     }
 }

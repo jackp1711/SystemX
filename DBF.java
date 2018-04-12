@@ -1,6 +1,6 @@
-import Models.Category;
-import Models.TimerEntry;
-import Models.Url;
+import models.Category;
+import models.TimerEntry;
+import models.Url;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.dao.GenericRawResults;

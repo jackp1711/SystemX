@@ -1,4 +1,4 @@
-package Models;
+package models;
 
 import com.j256.ormlite.field.DatabaseField;
 

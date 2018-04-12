@@ -1,21 +1,13 @@
-import java.awt.FlowLayout;
 import java.util.ArrayList;
-
 import javax.swing.JFrame;
-
-import Models.Category;
-import Models.TimerEntry;
+import models.Category;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
-import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.util.Rotation;
-import org.jfree.chart.ChartPanel;
-
-
 
 
 public class JFrameGraphTest extends JFrame{
