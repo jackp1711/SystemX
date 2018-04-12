@@ -18,7 +18,7 @@ import java.util.List;
 
 public class DBF {
 
-    private static final String source = "jdbc:sqlite:TrackerDatabase.sqlite";
+    private static final String DB_SOURCE = "jdbc:sqlite:TrackerDatabase.sqlite";
     public Dao<Url, String> urlDao;
     public Dao<Category, String> categoryDao;
     public Dao<TimerEntry, String> timerEntryDao;
@@ -29,7 +29,7 @@ public class DBF {
 
     public void startup() {
         try {
-            ConnectionSource connectionSource = new JdbcConnectionSource(DBF.source);
+            ConnectionSource connectionSource = new JdbcConnectionSource(DBF.DB_SOURCE);
             this.urlDao = DaoManager.createDao(connectionSource, Url.class);
             this.categoryDao = DaoManager.createDao(connectionSource, Category.class);
             this.timerEntryDao = DaoManager.createDao(connectionSource, TimerEntry.class);

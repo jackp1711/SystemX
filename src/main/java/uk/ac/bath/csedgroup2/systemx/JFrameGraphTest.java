@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class JFrameGraphTest extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	private DBF db;
+	private transient DBF db;
 
 	JFrame JFrame1 = new JFrame();
 
