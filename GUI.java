@@ -74,6 +74,8 @@ public class GUI {
     }
 
     private void createGroupsPanel() {
+        //remove anything that may have been leftover here, first
+        panelCategories.removeAll();
         for (Category category : this.db.getCategories()) {
             JTextField textField = new JTextField();
             JButton deleteButton = new JButton();
@@ -87,6 +89,8 @@ public class GUI {
                         // Saving code here
                         System.out.println("DELETING " + category);
                         db.deleteCategory(category);
+                        //redraw categories again
+                        createGroupsPanel();
                     }
                 }
             });
@@ -138,8 +142,7 @@ public class GUI {
 
                     //reset view
                     textField.setText("");
-                    //createGroupsPanel();
-                    //TODO - after this is done, reset the categories view (redraw using fresh database query)
+                    createGroupsPanel();
                 } catch (SQLException ex) {
                     System.err.println("Could not create category " + textField.getText());
                 }
