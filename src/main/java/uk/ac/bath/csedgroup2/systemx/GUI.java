@@ -1,9 +1,9 @@
 package uk.ac.bath.csedgroup2.systemx;
 
-import models.Category;
 import spark.Request;
 import spark.Response;
 import spark.Route;
+import uk.ac.bath.csedgroup2.systemx.models.Category;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

@@ -1,6 +1,6 @@
 package uk.ac.bath.csedgroup2.systemx;
 
-import models.Category;
+import uk.ac.bath.csedgroup2.systemx.models.Category;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -21,7 +21,7 @@ public class JFrameGraphTest extends JFrame{
 	JFrame JFrame1 = new JFrame();
 
 	public ChartPanel redraw() {
-		return createPieChart("You suck");
+		return createPieChart("Your analytics since 4eva");
 	}
 
 	public ChartPanel createPieChart(String chartTitle){

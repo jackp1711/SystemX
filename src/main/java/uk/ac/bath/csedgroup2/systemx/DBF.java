@@ -8,9 +8,9 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import models.Category;
-import models.TimerEntry;
-import models.Url;
+import uk.ac.bath.csedgroup2.systemx.models.Category;
+import uk.ac.bath.csedgroup2.systemx.models.TimerEntry;
+import uk.ac.bath.csedgroup2.systemx.models.Url;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class DBF {
             TableUtils.createTable(connectionSource, Category.class);
             TableUtils.createTable(connectionSource, TimerEntry.class);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             //There will be an exception when trying to recreate tables. There shouldn't be an exception on the first run of the application
         }
     }
