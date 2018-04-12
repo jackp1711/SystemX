@@ -3,9 +3,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.sql.Timestamp;
+
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import java.sql.SQLException;
+
+
+import Models.Category;
 import org.jfree.chart.ChartPanel;
 
 import static spark.Spark.post;
@@ -24,6 +29,7 @@ public class GUI {
     private JCheckBox chkEnableNotifications;
     private JButton btnSchedule;
     private JTextField dummyUrl;
+    private JPanel panelCategories;
 
     private DBF db;
     private Timer timer;
@@ -77,8 +83,88 @@ public class GUI {
         this.graphTest = graphTest;
         this.db = db;
         this.timer = new Timer(db);
-        this.createJframe();
         this.createTrackerListener();
+        this.createJframe();
+        this.createGroupsPanel();
+    }
+
+    private void createGroupsPanel() {
+        //remove anything that may have been leftover here, first
+        panelCategories.removeAll();
+        for (Category category : this.db.getCategories()) {
+            JTextField textField = new JTextField();
+            JButton deleteButton = new JButton();
+            deleteButton.setText("DELETE");
+
+            deleteButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete category " + category.getTitle() + "?", "Delete category", JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        // Saving code here
+                        System.out.println("DELETING " + category);
+                        db.deleteCategory(category);
+                        //redraw categories again
+                        createGroupsPanel();
+                    }
+                }
+            });
+
+            textField.setText(category.getTitle());
+            textField.setColumns(40);
+            textField.getDocument().addDocumentListener(new DocumentListener() {
+                public void changedUpdate(DocumentEvent e) {
+                    saveChangedCategory();
+                }
+
+                public void removeUpdate(DocumentEvent e) {
+                    saveChangedCategory();
+                }
+                public void insertUpdate(DocumentEvent e) {
+                    saveChangedCategory();
+                }
+
+                public void saveChangedCategory() {
+                    if (textField.getText().length()>0) {
+                        category.setTitle(textField.getText());
+                        try {
+                            db.categoryDao.update(category);
+                        } catch (SQLException e) {
+                            System.err.println("Could not update category " + category.getTitle());
+                        }
+                    }
+                }
+            });
+            panelCategories.add(textField);
+            panelCategories.add(deleteButton);
+        }
+        panelCategories.repaint();
+
+        this.createAddGroupView(panelCategories);
+    }
+
+    private void createAddGroupView(JPanel panel) {
+        JTextField textField = new JTextField();
+        textField.setColumns(30);
+        JButton button = new JButton();
+        button.setText("Create group");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Category category = new Category(textField.getText());
+                try {
+                    db.categoryDao.createOrUpdate(category);
+
+                    //reset view
+                    textField.setText("");
+                    createGroupsPanel();
+                } catch (SQLException ex) {
+                    System.err.println("Could not create category " + textField.getText());
+                }
+            }
+        });
+        panel.add(textField);
+        panel.add(button);
     }
 
     private void createTrackerListener() {
