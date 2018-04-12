@@ -10,7 +10,7 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 
 import javax.swing.*;
-import java.util.ArrayList;
+import java.util.List;
 
 
 public class JFrameGraphTest extends JFrame {
@@ -34,7 +34,7 @@ public class JFrameGraphTest extends JFrame {
 	private PieDataset createDataset(){
 		DefaultPieDataset data = new DefaultPieDataset();
 
-		ArrayList<Category> categoryArrayList = this.db.getGroupedCategoriesSinceTime(0);
+		List<Category> categoryArrayList = this.db.getGroupedCategoriesSinceTime(0);
 		for (Category category : categoryArrayList) {
 			data.setValue(category.getTitle(), category.getDuration());
 		}

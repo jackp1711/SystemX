@@ -84,7 +84,7 @@ public class DBF {
         return new ArrayList<>();
     }
 
-    public ArrayList<TimerEntry> getGroupedEntriesSinceTime(int time) {
+    public List<TimerEntry> getGroupedEntriesSinceTime(int time) {
         ArrayList<TimerEntry> timerEntryList = new ArrayList<>();
 
         try {
@@ -135,7 +135,7 @@ public class DBF {
         return new ArrayList<>();
     }
 
-    public ArrayList<Category> getGroupedCategoriesSinceTime(int time) {
+    public List<Category> getGroupedCategoriesSinceTime(int time) {
         ArrayList<Category> categoriesList = new ArrayList<>();
         try {
             String query = "select category.title, sum(timerentry.duration) from main.timerentry left join url on url.title = timerentry.url_id left join category on url.category_id = category.id where timerentry.start > ? group by category.title;";

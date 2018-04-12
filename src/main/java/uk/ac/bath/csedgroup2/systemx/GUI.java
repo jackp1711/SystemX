@@ -38,13 +38,11 @@ public class GUI {
         frame.setContentPane(PanelMain);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        TabbedPannel.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                // 0 = Main, 1 = Stats, 2 = Settings, 3 = Categories
-                if (TabbedPannel.getSelectedIndex() == 1) {
-                    pnlMyStats.removeAll();
-                    pnlMyStats.add(graphTest.redraw());
-                }
+        TabbedPannel.addChangeListener((e) -> {
+            // 0 = Main, 1 = Stats, 2 = Settings, 3 = Categories
+            if (TabbedPannel.getSelectedIndex() == 1) {
+                pnlMyStats.removeAll();
+                pnlMyStats.add(graphTest.redraw());
             }
         });
 
@@ -55,22 +53,20 @@ public class GUI {
         frame.setSize(600,500);
 
         //Start Button
-        btnStart.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String url = dummyUrl.getText(); //Add textview for this
-                if (!"".equals(url)) {
-                    //When starting
-                    if (btnStart.getText().equals("Start")){
-                        btnStart.setText("Stop");
-                        lstCatergory.setEnabled(false);
-                        timer.startTimer();
-                    }
-                    //When stopping
-                    else{
-                        btnStart.setText("Start");
-                        timer.stopTimer(url);
-                        lstCatergory.setEnabled(true);
-                    }
+        btnStart.addActionListener((e) -> {
+            String url = dummyUrl.getText(); //Add textview for this
+            if (!"".equals(url)) {
+                //When starting
+                if (btnStart.getText().equals("Start")){
+                    btnStart.setText("Stop");
+                    lstCatergory.setEnabled(false);
+                    timer.startTimer();
+                }
+                //When stopping
+                else{
+                    btnStart.setText("Start");
+                    timer.stopTimer(url);
+                    lstCatergory.setEnabled(true);
                 }
             }
         });
@@ -144,19 +140,16 @@ public class GUI {
         textField.setColumns(30);
         JButton button = new JButton();
         button.setText("Create group");
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Category category = new Category(textField.getText());
-                try {
-                    db.categoryDao.createOrUpdate(category);
+        button.addActionListener((e) -> {
+            Category category = new Category(textField.getText());
+            try {
+                db.categoryDao.createOrUpdate(category);
 
-                    //reset view
-                    textField.setText("");
-                    createGroupsPanel();
-                } catch (SQLException ex) {
-                    System.err.println("Could not create category " + textField.getText());
-                }
+                //reset view
+                textField.setText("");
+                createGroupsPanel();
+            } catch (SQLException ex) {
+                System.err.println("Could not create category " + textField.getText());
             }
         });
         panel.add(textField);
@@ -164,23 +157,20 @@ public class GUI {
     }
 
     private void createTrackerListener() {
-        post("/tracker", new Route() {
-            @Override
-            public Object handle(Request request, Response response) {
-                String message = request.queryParams("message");
-                String[] parts = message.split(" ");
-                if (parts.length == 3 || parts.length == 2) {
-                    int ts = Integer.parseInt(parts[0]);
-                    if (parts[1].equals("START")) {
-                        String url = parts[2];
-                        timer.startTimer(url, ts);
-                    } else {
-                        timer.stopTimer(ts);
-                    }
+        post("/tracker", (Request request, Response response) -> {
+            String message = request.queryParams("message");
+            String[] parts = message.split(" ");
+            if (parts.length == 3 || parts.length == 2) {
+                int ts = Integer.parseInt(parts[0]);
+                if (parts[1].equals("START")) {
+                    String url = parts[2];
+                    timer.startTimer(url, ts);
+                } else {
+                    timer.stopTimer(ts);
                 }
-                response.status(201); // 201 Created
-                return null;
             }
+            response.status(201); // 201 Created
+            return null;
         });
     }
 
