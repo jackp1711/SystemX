@@ -18,8 +18,6 @@ public class JFrameGraphTest extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private transient DBF db;
 
-	JFrame JFrame1 = new JFrame();
-
 	public ChartPanel redraw() {
 		return createPieChart("Your analytics since 4eva");
 	}
@@ -27,8 +25,7 @@ public class JFrameGraphTest extends JFrame {
 	public ChartPanel createPieChart(String chartTitle){
 		PieDataset dataset = createDataset();
 		JFreeChart chart = createChart(dataset, chartTitle);
-		ChartPanel chartPanel = new ChartPanel(chart);
-		return chartPanel;
+		return new ChartPanel(chart);
 	}
 	
 	private PieDataset createDataset(){
