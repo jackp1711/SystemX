@@ -1,4 +1,3 @@
-./idea
 *target*
 *.jar
 *.war
@@ -26,3 +25,7 @@ SystemX.iml
 
 # Locally stored "Eclipse launch configurations"
 *.launch
+
+*.iml
+*.sqlite
+.idea
