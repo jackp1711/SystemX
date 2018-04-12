@@ -13,7 +13,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 
 
-public class JFrameGraphTest extends JFrame{
+public class JFrameGraphTest extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private transient DBF db;
@@ -25,7 +25,6 @@ public class JFrameGraphTest extends JFrame{
 	}
 
 	public ChartPanel createPieChart(String chartTitle){
-		System.out.println("PieChart");
 		PieDataset dataset = createDataset();
 		JFreeChart chart = createChart(dataset, chartTitle);
 		ChartPanel chartPanel = new ChartPanel(chart);
@@ -33,7 +32,6 @@ public class JFrameGraphTest extends JFrame{
 	}
 	
 	private PieDataset createDataset(){
-		System.out.println("PieDataset");
 		DefaultPieDataset data = new DefaultPieDataset();
 
 		ArrayList<Category> categoryArrayList = this.db.getGroupedCategoriesSinceTime(0);
@@ -46,7 +44,6 @@ public class JFrameGraphTest extends JFrame{
 	
 
 	private JFreeChart createChart(PieDataset dataset, String title){
-		System.out.println("Create chart");
 		JFreeChart chart = ChartFactory.createPieChart(title, dataset, true, true, false);
 		PiePlot plot = (PiePlot) chart.getPlot();
 		plot.setStartAngle(290);

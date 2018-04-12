@@ -51,8 +51,6 @@ public class Timer {
             //reset timer
             this.timerOn = false;
             this.startTime = 0;
-        } else {
-            System.err.println("Tried to stop timer when it was not running");
         }
 
     }

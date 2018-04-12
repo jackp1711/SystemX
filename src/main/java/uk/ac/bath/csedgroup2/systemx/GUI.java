@@ -45,7 +45,6 @@ public class GUI {
                     pnlMyStats.removeAll();
                     pnlMyStats.add(graphTest.redraw());
                 }
-                System.out.println("Tab: " + TabbedPannel.getSelectedIndex());
             }
         });
 
@@ -100,7 +99,6 @@ public class GUI {
                     int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete category " + category.getTitle() + "?", "Delete category", JOptionPane.YES_NO_OPTION);
                     if (dialogResult == JOptionPane.YES_OPTION) {
                         // Saving code here
-                        System.out.println("DELETING " + category);
                         db.deleteCategory(category);
                         //redraw categories again
                         createGroupsPanel();
@@ -180,7 +178,6 @@ public class GUI {
                         timer.stopTimer(ts);
                     }
                 }
-                System.out.println(message);
                 response.status(201); // 201 Created
                 return null;
             }

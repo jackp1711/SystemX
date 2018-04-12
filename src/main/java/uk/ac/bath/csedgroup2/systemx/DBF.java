@@ -38,7 +38,6 @@ public class DBF {
             TableUtils.createTable(connectionSource, Category.class);
             TableUtils.createTable(connectionSource, TimerEntry.class);
         } catch (Exception e) {
-            //e.printStackTrace();
             //There will be an exception when trying to recreate tables. There shouldn't be an exception on the first run of the application
         }
     }
@@ -49,16 +48,14 @@ public class DBF {
         try {
             url = this.urlDao.queryForId(website);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Url could not be fetched from database, create a new one");
         }
         if (url == null) {
             Url newUrl = new Url(website, null);
             try {
-                System.out.println("Trying to create url " + newUrl);
                 this.urlDao.create(newUrl);
                 url = newUrl;
             } catch (SQLException ex) {
-                ex.printStackTrace();
                 System.err.println("Could not save url to database");
             }
         }
@@ -70,7 +67,6 @@ public class DBF {
                 this.timerEntryDao.create(timerEntry);
                 return timerEntry;
             } catch (SQLException e) {
-                e.printStackTrace();
                 System.err.println("Could not save time entry to database");
             }
         }
@@ -97,7 +93,6 @@ public class DBF {
             queryBuilder.groupBy("url_id");
             queryBuilder.where().gt("start", time);
 
-            //System.out.println(queryBuilder.prepareStatementString());
             GenericRawResults<TimerEntry> results = this.timerEntryDao.queryRaw(queryBuilder.prepareStatementString(), new RawRowMapper<TimerEntry>() {
                 @Override
                 public TimerEntry mapRow(String[] columnNames, String[] resultColumns) throws SQLException {
@@ -109,7 +104,6 @@ public class DBF {
             });
             for (TimerEntry timerEntry : results) {
                 timerEntryList.add(timerEntry);
-                System.out.println(timerEntry);
             }
             return timerEntryList;
 
@@ -157,11 +151,9 @@ public class DBF {
             }, "" + time);
             for (Category category : results) {
                 categoriesList.add(category);
-                System.out.println(category);
             }
             return categoriesList;
         } catch (SQLException e) {
-            e.printStackTrace();
             System.err.println("Could not retrieve groupped categories");
         }
         return null;
