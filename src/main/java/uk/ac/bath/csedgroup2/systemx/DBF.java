@@ -81,7 +81,7 @@ public class DBF {
         } catch (SQLException e) {
             System.err.println("Could not retrieve data");
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public ArrayList<TimerEntry> getGroupedEntriesSinceTime(int time) {
@@ -110,7 +110,7 @@ public class DBF {
         } catch (SQLException e) {
             System.err.println("Could not retrieve data");
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public void deleteCategory(Category category) {
@@ -132,7 +132,7 @@ public class DBF {
         } catch (SQLException e) {
             System.err.println("Could not query for all categories");
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public ArrayList<Category> getGroupedCategoriesSinceTime(int time) {
@@ -156,6 +156,6 @@ public class DBF {
         } catch (SQLException e) {
             System.err.println("Could not retrieve groupped categories");
         }
-        return null;
+        return new ArrayList<>();
     }
 }
