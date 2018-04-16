@@ -116,15 +116,20 @@ public class DBF {
         return null;
     }
 
-    public List<TimerEntry> getEntriesSinceTime(int time) {
+    public List<TimerEntry> getEntriesBetweenTimes(int from, int to) {
         try {
             QueryBuilder<TimerEntry, String> queryBuilder = timerEntryDao.queryBuilder();
-            queryBuilder.where().gt("start", time);
+            queryBuilder.where().gt("start", from);
+            queryBuilder.where().lt("end", to);
             return queryBuilder.query();
         } catch (SQLException e) {
             System.err.println("Could not retrieve data");
         }
         return new ArrayList<>();
+    }
+
+    public List<TimerEntry> getEntriesSinceTime(int time) {
+        return getEntriesBetweenTimes(time, Timer.getCurrentTimestamp());
     }
 
     public List<TimerEntry> getGroupedEntriesSinceTime(int time) {
@@ -199,19 +204,18 @@ public class DBF {
     }
 
     public List<Category> getGroupedCategoriesSinceTime(int time) {
+        return  getGroupedCategoriesBetweenTimes(time, Timer.getCurrentTimestamp());
+    }
+    public List<Category> getGroupedCategoriesBetweenTimes(int from, int to) {
         ArrayList<Category> categoriesList = new ArrayList<>();
         try {
-            String query = "select category.title, sum(timerentry.duration) from main.timerentry left join url on url.title = timerentry.url_id left join category on url.category_id = category.id where timerentry.start > ? group by category.title;";
-
-            GenericRawResults<Category> results = categoryDao.queryRaw(query, new RawRowMapper<Category>() {
-                @Override
-                public Category mapRow(String[] columnNames, String[] resultColumns) throws SQLException {
-                    Category c = new Category();
-                    c.setTitle(resultColumns[0] != null ? resultColumns[0] : "Others");
-                    c.setDuration(Integer.parseInt(resultColumns[1]));
-                    return c;
-                }
-            }, "" + time);
+            String query = "select category.title, sum(timerentry.duration) from main.timerentry left join url on url.title = timerentry.url_id left join category on url.category_id = category.id where timerentry.start > ? and timerentry.end < ? group by category.title;";
+            GenericRawResults<Category> results = categoryDao.queryRaw(query, (String[] columnNames, String[] resultColumns) -> {
+                Category c = new Category();
+                c.setTitle(resultColumns[0] != null ? resultColumns[0] : "Others");
+                c.setDuration(Integer.parseInt(resultColumns[1]));
+                return c;
+            }, "" + from, "" + to);
             for (Category category : results) {
                 categoriesList.add(category);
             }

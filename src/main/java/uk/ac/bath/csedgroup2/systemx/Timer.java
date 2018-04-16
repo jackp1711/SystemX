@@ -13,7 +13,7 @@ public class Timer {
         this.db = db;
     }
 
-    private int getCurrentTimestamp() {
+    public static int getCurrentTimestamp() {
         return (int) (System.currentTimeMillis() / 1000);
     }
 
@@ -40,7 +40,7 @@ public class Timer {
     }
 
     public void stopTimer() {
-        int now = this.getCurrentTimestamp();
+        int now = getCurrentTimestamp();
         stopTimer(now);
     }
 
