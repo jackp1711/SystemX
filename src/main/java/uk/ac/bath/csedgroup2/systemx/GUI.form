@@ -10,7 +10,7 @@
     </properties>
     <border type="line"/>
     <children>
-      <tabbedpane id="2925c" binding="tabbedPannel">
+      <tabbedpane id="2925c" binding="tabbedPanel">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="1" use-parent-layout="false">
             <preferred-size width="200" height="200"/>
@@ -40,12 +40,7 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <model>
-                    <item value="Productive"/>
-                    <item value="Social Media"/>
-                    <item value="Entertainment"/>
-                    <item value="Other"/>
-                  </model>
+                  <model/>
                 </properties>
               </component>
               <component id="e5164" class="javax.swing.JTextField" binding="dummyUrl">
@@ -95,6 +90,24 @@
           <grid id="9b2f2" binding="panelCategories" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
             <constraints>
               <tabbedpane title="Categories"/>
+            </constraints>
+            <properties>
+              <enabled value="true"/>
+            </properties>
+            <border type="none" title=""/>
+            <children/>
+          </grid>
+          <grid id="7336a" binding="urlsPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints>
+              <tabbedpane title="URLs"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children/>
+          </grid>
+          <grid id="8825f" binding="goalsPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints>
+              <tabbedpane title="Goals"/>
             </constraints>
             <properties>
               <enabled value="true"/>

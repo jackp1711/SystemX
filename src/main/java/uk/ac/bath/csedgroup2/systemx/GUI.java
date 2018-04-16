@@ -3,16 +3,19 @@ package uk.ac.bath.csedgroup2.systemx;
 import spark.Request;
 import spark.Response;
 import uk.ac.bath.csedgroup2.systemx.models.Category;
+import uk.ac.bath.csedgroup2.systemx.models.Url;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Vector;
 
 import static spark.Spark.post;
 
 public class GUI {
-    private JTabbedPane tabbedPannel;
+    private JTabbedPane tabbedPanel;
     private JPanel panelMain;
     private JPanel pnlMainMenu;
     private JPanel pnlMyStats;
@@ -23,6 +26,8 @@ public class GUI {
     private JButton btnSchedule;
     private JTextField dummyUrl;
     private JPanel panelCategories;
+    private JPanel urlsPanel;
+    private JPanel goalsPanel;
 
     private DBF db;
     private Timer timer;
@@ -33,19 +38,13 @@ public class GUI {
         frame.setContentPane(panelMain);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        tabbedPannel.addChangeListener(e -> {
+        tabbedPanel.addChangeListener(e -> {
             // 0 = Main, 1 = Stats, 2 = Settings, 3 = Categories
-            if (tabbedPannel.getSelectedIndex() == 1) {
+            if (tabbedPanel.getSelectedIndex() == 1) {
                 pnlMyStats.removeAll();
                 pnlMyStats.add(graphTest.redraw());
             }
         });
-
-        frame.pack();
-        frame.setVisible(true);
-        frame.setTitle("ProjectX");
-
-        frame.setSize(600,500);
 
         //Start Button
         btnStart.addActionListener(e -> {
@@ -65,6 +64,13 @@ public class GUI {
                 }
             }
         });
+
+
+        frame.pack();
+        frame.setVisible(true);
+        frame.setTitle("ProjectX");
+
+        frame.setSize(600,500);
     }
 
     public GUI(DBF db, JFrameGraphTest graphTest) {
@@ -74,12 +80,46 @@ public class GUI {
         this.createTrackerListener();
         this.createJframe();
         this.createGroupsPanel();
+        this.createUrlsPanel();
+    }
+
+    private void createUrlsPanel() {
+        List<Category> categories = this.db.getCategories();
+        List<Url> urls = this.db.getUrls();
+
+        Vector categoryModel = new Vector();
+        categoryModel.add(Category.createNullCategory());
+        categoryModel.addAll(categories);
+
+
+        for(Category category : db.getCategories()) {
+            //categoryModel.addElement(category);
+            System.out.println("adding to combo: " + category);
+        }
+
+        for (Url url : urls) {
+            JTextField urlTextField = new JTextField();
+            urlTextField.setText(url.getTitle());
+            urlTextField.setColumns(32);
+            urlTextField.setEnabled(false);
+
+            JComboBox categoryCombo = new JComboBox(categoryModel);
+            categoryCombo.addActionListener(e -> {
+                JComboBox comboBox = (JComboBox)e.getSource();
+                Category category = (Category)comboBox.getSelectedItem();
+                System.out.println(url.getTitle() + category);
+                db.changeUrlCategory(url, category);
+            });
+            urlsPanel.add(urlTextField);
+            urlsPanel.add(categoryCombo);
+        }
     }
 
     private void createGroupsPanel() {
         //remove anything that may have been leftover here, first
         panelCategories.removeAll();
-        for (Category category : this.db.getCategories()) {
+        List<Category> categories = this.db.getCategories();
+        for (Category category : categories) {
             JTextField textField = new JTextField();
             JButton deleteButton = new JButton();
             deleteButton.setText("DELETE");
@@ -131,7 +171,7 @@ public class GUI {
         JTextField textField = new JTextField();
         textField.setColumns(30);
         JButton button = new JButton();
-        button.setText("Create group");
+        button.setText("Create category");
         button.addActionListener(e -> {
             Category category = new Category(textField.getText());
             try {
@@ -170,5 +210,9 @@ public class GUI {
         DBF db = new DBF();
         JFrameGraphTest graphTest = new JFrameGraphTest(db);
         new GUI(db, graphTest);
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 }

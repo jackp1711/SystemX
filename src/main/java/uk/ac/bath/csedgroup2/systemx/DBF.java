@@ -126,6 +126,26 @@ public class DBF {
         }
     }
 
+    public List<Url> getUrls() {
+        try {
+            return urlDao.queryForAll();
+        } catch (SQLException e) {
+            System.err.println("Could not query for all categories");
+        }
+        return new ArrayList<>();
+    }
+
+    public void changeUrlCategory(Url url, Category category) {
+        try {
+            url.setCategory(category);
+            urlDao.update(url);
+        } catch (SQLException e) {
+            System.out.println(url.getTitle() + category);
+            e.printStackTrace();
+            System.err.println("Updating url category failed");
+        }
+    }
+
     public List<Category> getCategories() {
         try {
             return categoryDao.queryForAll();

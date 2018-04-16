@@ -49,4 +49,10 @@ public class Category extends CommonModel {
     public void setDuration(int duration) {
         this.duration = duration;
     }
+
+    public static Category createNullCategory() {
+        Category cat = new Category();
+        cat.setTitle("Others");
+        return cat;
+    }
 }
