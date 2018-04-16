@@ -1,5 +1,6 @@
 package uk.ac.bath.csedgroup2.systemx;
 
+import com.j256.ormlite.misc.SqlExceptionUtil;
 import spark.Request;
 import spark.Response;
 import uk.ac.bath.csedgroup2.systemx.models.Category;
@@ -9,6 +10,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -39,10 +41,13 @@ public class GUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         tabbedPanel.addChangeListener(e -> {
-            // 0 = Main, 1 = Stats, 2 = Settings, 3 = Categories
+            // 0 = Main, 1 = Stats, 2 = Settings, 3 = Categories, 4 = URLs, 5 = goals
             if (tabbedPanel.getSelectedIndex() == 1) {
                 pnlMyStats.removeAll();
                 pnlMyStats.add(graphTest.redraw());
+            }
+            if (tabbedPanel.getSelectedIndex() == 4) {
+                createUrlsPanel();
             }
         });
 
@@ -81,29 +86,107 @@ public class GUI {
         this.createJframe();
         this.createGroupsPanel();
         this.createUrlsPanel();
+        this.createGoalsPanel();
+    }
+
+    private void createGoalsPanel() {
+        List<Category> categories = this.db.getCategories();
+        Vector groupTypesModel = new Vector();
+        groupTypesModel.add("<");
+        groupTypesModel.add(">");
+
+        for (Category category : categories) {
+            //categoryModel.addElement(category);
+            JTextField goalValueTextField = new JTextField();
+            goalValueTextField.setColumns(20);
+            goalValueTextField.getDocument().addDocumentListener(new DocumentListener() {
+                public void changedUpdate(DocumentEvent e) {
+                    saveChangedCategory();
+                }
+
+                public void removeUpdate(DocumentEvent e) {
+                    saveChangedCategory();
+                }
+                public void insertUpdate(DocumentEvent e) {
+                    saveChangedCategory();
+                }
+
+                public void saveChangedCategory() {
+                    if (goalValueTextField.getText().length()>0) {
+                        category.setGoal(Category.deformatTimestamp(goalValueTextField.getText()));
+                        try {
+                            db.categoryDao.update(category);
+                        } catch (SQLException e) {
+                            System.err.println("Could not update category " + category.getTitle());
+                        }
+                    }
+                }
+            });
+
+
+            JTextField categoryNameTextField = new JTextField();
+            categoryNameTextField.setColumns(20);
+            categoryNameTextField.setEnabled(false);
+            JComboBox goalTypeCombo = new JComboBox(groupTypesModel);
+            if (category.isTypeLessThan()) {
+                goalTypeCombo.setSelectedItem("<");
+            } else {
+                goalTypeCombo.setSelectedItem(">");
+            }
+            goalTypeCombo.addActionListener(e -> {
+                JComboBox comboBox = (JComboBox)e.getSource();
+                if (comboBox.getSelectedItem() == "<") {
+                    category.setGoalType(Category.TYPE_LESS_THAN);
+                } else {
+                    category.setGoalType(Category.TYPE_MORE_THAN);
+                }
+                try {
+                    db.categoryDao.update(category);
+                } catch (SQLException ex) {
+                    System.err.println("Could not update goal type for " + category.getTitle());
+                }
+            });
+
+
+            categoryNameTextField.setText(category.getTitle());
+            goalValueTextField.setText(Category.formatGoal(category.getGoal()));
+
+            goalsPanel.add(categoryNameTextField);
+            goalsPanel.add(goalTypeCombo);
+            goalsPanel.add(goalValueTextField);
+        }
+    }
+
+    public static int findIndexOf(Object o, List list) {
+        if (o == null) {
+            return -1;
+        }
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println(o.toString() + list.get(i).toString());
+            if (o.toString().equals(list.get(i).toString())) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private void createUrlsPanel() {
-        List<Category> categories = this.db.getCategories();
+        urlsPanel.removeAll();
+        ArrayList<Category> categories = (ArrayList) this.db.getCategories();
         List<Url> urls = this.db.getUrls();
 
         Vector categoryModel = new Vector();
         categoryModel.add(Category.createNullCategory());
         categoryModel.addAll(categories);
 
-
-        for(Category category : db.getCategories()) {
-            //categoryModel.addElement(category);
-            System.out.println("adding to combo: " + category);
-        }
-
-        for (Url url : urls) {
+        for (Url url : this.db.getUrls()) {
             JTextField urlTextField = new JTextField();
             urlTextField.setText(url.getTitle());
             urlTextField.setColumns(32);
             urlTextField.setEnabled(false);
 
             JComboBox categoryCombo = new JComboBox(categoryModel);
+            categoryCombo.setSelectedIndex(findIndexOf(url.getCategory(), categories) + 1);
             categoryCombo.addActionListener(e -> {
                 JComboBox comboBox = (JComboBox)e.getSource();
                 Category category = (Category)comboBox.getSelectedItem();

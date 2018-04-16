@@ -3,12 +3,19 @@ package uk.ac.bath.csedgroup2.systemx.models;
 import com.j256.ormlite.field.DatabaseField;
 
 public class Category extends CommonModel {
+    public static final boolean TYPE_LESS_THAN = false;
+    public static final boolean TYPE_MORE_THAN = true;
+
     @DatabaseField(id = true)
     private String id;
     @DatabaseField(canBeNull = false)
     private String title;
+    @DatabaseField
+    private boolean goalType;
+    @DatabaseField
+    private int goal; //value in seconds
 
-    //aggreavated value, not saved to DB
+    //aggregated value, not saved to DB
     private int duration;
 
     public Category() {
@@ -20,6 +27,30 @@ public class Category extends CommonModel {
         if (this.id == null) {
             this.id = generateId();
         }
+    }
+
+    public boolean isTypeMoreThan() {
+        return !isTypeLessThan();
+    }
+
+    public boolean isTypeLessThan() {
+        return goalType == Category.TYPE_LESS_THAN;
+    }
+
+    public boolean getGoalType() {
+        return goalType;
+    }
+
+    public void setGoalType(boolean goalType) {
+        this.goalType = goalType;
+    }
+
+    public int getGoal() {
+        return goal;
+    }
+
+    public void setGoal(int goal) {
+        this.goal = goal;
     }
 
     public String getId() {
@@ -54,5 +85,13 @@ public class Category extends CommonModel {
         Category cat = new Category();
         cat.setTitle("Others");
         return cat;
+    }
+
+    public static String formatGoal(int seconds) {
+        return "" + seconds;
+    }
+
+    public static int deformatTimestamp(String date) {
+        return Integer.parseInt(date);
     }
 }

@@ -5,7 +5,7 @@ import com.j256.ormlite.field.DatabaseField;
 public class Url extends CommonModel {
     @DatabaseField(id = true)
     private String title;
-    @DatabaseField(foreign = true)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true, foreignColumnName = "id")
     private Category category;
 
     public Url() {
