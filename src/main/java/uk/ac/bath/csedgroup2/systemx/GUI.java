@@ -30,6 +30,7 @@ public class GUI {
     private JPanel panelCategories;
     private JPanel urlsPanel;
     private JPanel goalsPanel;
+    private JButton dataResetButton;
 
     private DBF db;
     private Timer timer;
@@ -48,6 +49,14 @@ public class GUI {
             }
             if (tabbedPanel.getSelectedIndex() == 4) {
                 createUrlsPanel();
+            }
+
+            if (tabbedPanel.getSelectedIndex() == 3) {
+                createGroupsPanel();
+            }
+
+            if (tabbedPanel.getSelectedIndex() == 5) {
+                createGoalsPanel();
             }
         });
 
@@ -70,7 +79,12 @@ public class GUI {
             }
         });
 
-
+        dataResetButton.addActionListener(e-> {
+            int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete all data and reset the database?", "Delete all data", JOptionPane.YES_NO_OPTION);
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                db.resetDatabase();
+            }
+        });
         frame.pack();
         frame.setVisible(true);
         frame.setTitle("ProjectX");
@@ -84,9 +98,9 @@ public class GUI {
         this.timer = new Timer(db);
         this.createTrackerListener();
         this.createJframe();
-        this.createGroupsPanel();
-        this.createUrlsPanel();
-        this.createGoalsPanel();
+        //this.createGroupsPanel();
+        //this.createUrlsPanel();
+
     }
 
     private void createGoalsPanel() {
@@ -162,7 +176,6 @@ public class GUI {
             return -1;
         }
         for (int i = 0; i < list.size(); i++) {
-            System.out.println(o.toString() + list.get(i).toString());
             if (o.toString().equals(list.get(i).toString())) {
                 return i;
             }
@@ -173,7 +186,6 @@ public class GUI {
     private void createUrlsPanel() {
         urlsPanel.removeAll();
         ArrayList<Category> categories = (ArrayList) this.db.getCategories();
-        List<Url> urls = this.db.getUrls();
 
         Vector categoryModel = new Vector();
         categoryModel.add(Category.createNullCategory());

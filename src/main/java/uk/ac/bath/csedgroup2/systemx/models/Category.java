@@ -13,7 +13,7 @@ public class Category extends CommonModel {
     @DatabaseField
     private boolean goalType;
     @DatabaseField
-    private int goal; //value in seconds
+    private int goal; //value in seconds, per week
 
     //aggregated value, not saved to DB
     private int duration;

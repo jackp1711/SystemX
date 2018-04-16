@@ -37,8 +37,51 @@ public class DBF {
             TableUtils.createTable(connectionSource, Url.class);
             TableUtils.createTable(connectionSource, Category.class);
             TableUtils.createTable(connectionSource, TimerEntry.class);
+
+            generateSampleData();
         } catch (Exception e) {
             //There will be an exception when trying to recreate tables. There shouldn't be an exception on the first run of the application
+        }
+    }
+
+    public void resetDatabase() {
+        try {
+            TableUtils.dropTable(urlDao.getConnectionSource(), Url.class, true);
+            TableUtils.dropTable(urlDao.getConnectionSource(), Category.class, true);
+            TableUtils.dropTable(urlDao.getConnectionSource(), TimerEntry.class, true);
+            startup();
+        } catch (SQLException e) {
+            //Error dropping tables
+        }
+    }
+
+    public void generateSampleData() {
+        Category c1 = new Category("PRODUCTIVE");
+        c1.setGoalType(Category.TYPE_MORE_THAN);
+        c1.setGoal(90000);
+        Category c2 = new Category("TIME-wasters");
+        c2.setGoalType(Category.TYPE_LESS_THAN);
+        c2.setGoal(90000);
+        Category c3 = new Category("Entertainment");
+        c3.setGoalType(Category.TYPE_LESS_THAN);
+        c3.setGoal(72000);
+
+        Url url1 = new Url("youtube.com", c3);
+        Url url2 = new Url("facebook.com", c2);
+        Url url3 = new Url("bbc.co.uk", c3);
+        Url url4 = new Url("docs.google.com", c1);
+        try {
+
+            categoryDao.create(c1);
+            categoryDao.create(c2);
+            categoryDao.create(c3);
+            urlDao.create(url1);
+            urlDao.create(url2);
+            urlDao.create(url3);
+            urlDao.create(url4);
+
+        } catch (SQLException e) {
+            System.err.println("Error creating sample data");
         }
     }
 
