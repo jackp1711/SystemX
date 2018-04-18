@@ -27,6 +27,9 @@ public class DBF {
         this.startup();
     }
 
+    /**
+     * Run on DBF initiation - initialize database and tables
+     */
     public void startup() {
         try {
             //Initiate DAOs (Data Access Objects)
@@ -48,7 +51,9 @@ public class DBF {
         }
     }
 
-    //When called, re-sets database to "factory settings"
+    /**
+     * When called, re-sets database to "factory settings"
+     */
     public void resetDatabase() {
         try {
             //Drop all tables (exception if tables don't exist or database locked)
@@ -62,7 +67,9 @@ public class DBF {
         }
     }
 
-    //Generates sample data for an empty database
+    /**
+     * Generates sample data for an empty database
+     */
     public void generateSampleData() {
         Category c1 = new Category("PRODUCTIVE");
         c1.setGoalType(Category.TYPE_MORE_THAN);
@@ -134,6 +141,11 @@ public class DBF {
         return null;
     }
 
+    /**
+     * @param from
+     * @param to
+     * @return List of all timer entries between timestamps provided
+     */
     public List<TimerEntry> getEntriesBetweenTimes(int from, int to) {
         try {
             QueryBuilder<TimerEntry, String> queryBuilder = timerEntryDao.queryBuilder();
@@ -146,10 +158,18 @@ public class DBF {
         return new ArrayList<>();
     }
 
+    /**
+     * @param time timestamp since when timer entries are to be returned
+     * @return List of all timer entries since the timestamp provided
+     */
     public List<TimerEntry> getEntriesSinceTime(int time) {
         return getEntriesBetweenTimes(time, Timer.getCurrentTimestamp());
     }
 
+    /**
+     * @param time timestamp since when timer entries are to be aggregated. 0 = since forever
+     * @return List of all Urls in the database with the total timer durations calculated for each Url
+     */
     public List<TimerEntry> getGroupedEntriesSinceTime(int time) {
         ArrayList<TimerEntry> timerEntryList = new ArrayList<>();
 
@@ -243,6 +263,12 @@ public class DBF {
     public List<Category> getGroupedCategoriesSinceTime(int time) {
         return  getGroupedCategoriesBetweenTimes(time, Timer.getCurrentTimestamp());
     }
+
+    /**
+     * @param from timestamp since when timer entries are to be aggregated. 0 = since forever
+     * @param to timestamp until when timer entries are to be aggregated
+     * @return List of all categories in the database with the total timer durations calculated for each Category
+     */
     public List<Category> getGroupedCategoriesBetweenTimes(int from, int to) {
         ArrayList<Category> categoriesList = new ArrayList<>();
         try {
