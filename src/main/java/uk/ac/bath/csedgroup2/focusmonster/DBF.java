@@ -29,32 +29,40 @@ public class DBF {
 
     public void startup() {
         try {
+            //Initiate DAOs (Data Access Objects)
             ConnectionSource connectionSource = new JdbcConnectionSource(DBF.DB_SOURCE);
             urlDao = DaoManager.createDao(connectionSource, Url.class);
             categoryDao = DaoManager.createDao(connectionSource, Category.class);
             timerEntryDao = DaoManager.createDao(connectionSource, TimerEntry.class);
 
+            //Create database tables as required by models
+            //Throws an exception if tables already exist
             TableUtils.createTable(connectionSource, Url.class);
             TableUtils.createTable(connectionSource, Category.class);
             TableUtils.createTable(connectionSource, TimerEntry.class);
 
+            //If tables did not exist (ie creating new database) populate it with some sample data
             generateSampleData();
         } catch (Exception e) {
             //There will be an exception when trying to recreate tables. There shouldn't be an exception on the first run of the application
         }
     }
 
+    //When called, re-sets database to "factory settings"
     public void resetDatabase() {
         try {
+            //Drop all tables (exception if tables don't exist or database locked)
             TableUtils.dropTable(urlDao.getConnectionSource(), Url.class, true);
             TableUtils.dropTable(urlDao.getConnectionSource(), Category.class, true);
             TableUtils.dropTable(urlDao.getConnectionSource(), TimerEntry.class, true);
+            //re-initiate database
             startup();
         } catch (SQLException e) {
             //Error dropping tables
         }
     }
 
+    //Generates sample data for an empty database
     public void generateSampleData() {
         Category c1 = new Category("PRODUCTIVE");
         c1.setGoalType(Category.TYPE_MORE_THAN);
@@ -85,15 +93,24 @@ public class DBF {
         }
     }
 
+    /**
+     * Stores one tracked website and returns a TimerEntry object, as stored in the database
+     * @param start timestamp of when the tracking started
+     * @param end timestamp of when the tracking ended
+     * @param website domain of the website visited
+     * @return
+     */
     public TimerEntry storeData(int start, int end, String website) {
         System.out.println("trying to store " + start + " " + end + " " + website);
         Url url = null;
         try {
+            //Try find Url object in the database
             url = urlDao.queryForId(website);
         } catch (SQLException e) {
             System.err.println("Url could not be fetched from database, create a new one");
         }
         if (url == null) {
+            //If Url object was not found, create it
             Url newUrl = new Url(website, null);
             try {
                 urlDao.create(newUrl);
@@ -103,8 +120,9 @@ public class DBF {
             }
         }
 
+        //If Url object was not found and could not be created, do not store the timer entry
         if (url != null) {
-            TimerEntry timerEntry = new TimerEntry(url, start, end, (int) (end - start));
+            TimerEntry timerEntry = new TimerEntry(url, start, end, (end - start));
 
             try {
                 timerEntryDao.create(timerEntry);
@@ -156,6 +174,10 @@ public class DBF {
         return new ArrayList<>();
     }
 
+    /**
+     * Deletes category from database. Also updates all dependent Urls with null category
+     * @param category category object to be deleted
+     */
     public void deleteCategory(Category category) {
         try {
             List<Url> urls = urlDao.queryForEq("category_id", category.getId());
@@ -169,6 +191,9 @@ public class DBF {
         }
     }
 
+    /**
+     * @return List of all Url object in the database
+     */
     public List<Url> getUrls() {
         try {
             return urlDao.queryForAll();
@@ -178,6 +203,11 @@ public class DBF {
         return new ArrayList<>();
     }
 
+    /**
+     * Changes category of a Url object. This assumes Url object has previously been saved in the database
+     * @param url Url object as retrieved from database
+     * @param category Category object or null, to be set as the new category
+     */
     public void changeUrlCategory(Url url, Category category) {
         try {
             url.setCategory(category);
@@ -189,6 +219,9 @@ public class DBF {
         }
     }
 
+    /**
+     * @return List of all Category objects in the database
+     */
     public List<Category> getCategories() {
         try {
             return categoryDao.queryForAll();
@@ -198,6 +231,10 @@ public class DBF {
         return new ArrayList<>();
     }
 
+    /**
+     * @param time timestamp since when timer entries are to be aggregated. 0 = since forever
+     * @return List of all categories in the database with the total timer durations calculated for each Category
+     */
     public List<Category> getGroupedCategoriesSinceTime(int time) {
         ArrayList<Category> categoriesList = new ArrayList<>();
         try {

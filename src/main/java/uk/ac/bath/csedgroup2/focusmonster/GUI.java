@@ -16,19 +16,17 @@ import java.util.Vector;
 import static spark.Spark.post;
 
 public class GUI {
-    private JTabbedPane tabbedPanel;
+    private JTabbedPane navigationPanel;
     private JPanel panelMain;
-    private JPanel pnlMainMenu;
-    private JPanel pnlMyStats;
-    private JPanel pnlSettings;
+    private JPanel panelHomeScreen;
+    private JPanel panelStatistics;
+    private JPanel panelSettings;
     private JButton btnStart;
     private JComboBox lstCatergory;
-    private JCheckBox chkEnableNotifications;
-    private JButton btnSchedule;
     private JTextField dummyUrl;
     private JPanel panelCategories;
-    private JPanel urlsPanel;
-    private JPanel goalsPanel;
+    private JPanel panelUrls;
+    private JPanel panelGoals;
     private JButton dataResetButton;
 
     private DBF db;
@@ -40,54 +38,11 @@ public class GUI {
         frame.setContentPane(panelMain);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        tabbedPanel.addChangeListener(e -> {
-            // 0 = Main, 1 = Stats, 2 = Settings, 3 = Categories, 4 = URLs, 5 = goals
-            if (tabbedPanel.getSelectedIndex() == 1) {
-                pnlMyStats.removeAll();
-                pnlMyStats.add(graphTest.redraw());
-            }
-            if (tabbedPanel.getSelectedIndex() == 4) {
-                createUrlsPanel();
-            }
+        createUIComponents();
 
-            if (tabbedPanel.getSelectedIndex() == 3) {
-                createGroupsPanel();
-            }
-
-            if (tabbedPanel.getSelectedIndex() == 5) {
-                createGoalsPanel();
-            }
-        });
-
-        //Start Button
-        btnStart.addActionListener(e -> {
-            String url = dummyUrl.getText(); //Add textview for this
-            if (!"".equals(url)) {
-                //When starting
-                if (btnStart.getText().equals("Start")){
-                    btnStart.setText("Stop");
-                    lstCatergory.setEnabled(false);
-                    timer.startTimer();
-                }
-                //When stopping
-                else{
-                    btnStart.setText("Start");
-                    timer.stopTimer(url);
-                    lstCatergory.setEnabled(true);
-                }
-            }
-        });
-
-        dataResetButton.addActionListener(e-> {
-            int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete all data and reset the database?", "Delete all data", JOptionPane.YES_NO_OPTION);
-            if (dialogResult == JOptionPane.YES_OPTION) {
-                db.resetDatabase();
-            }
-        });
         frame.pack();
         frame.setVisible(true);
-        frame.setTitle("ProjectX");
-
+        frame.setTitle("Focus Monster");
         frame.setSize(600,500);
     }
 
@@ -97,12 +52,10 @@ public class GUI {
         this.timer = new Timer(db);
         this.createTrackerListener();
         this.createJframe();
-        //this.createGroupsPanel();
-        //this.createUrlsPanel();
-
     }
 
     private void createGoalsPanel() {
+        panelGoals.removeAll();
         List<Category> categories = this.db.getCategories();
         Vector groupTypesModel = new Vector();
         groupTypesModel.add("<");
@@ -164,12 +117,13 @@ public class GUI {
             categoryNameTextField.setText(category.getTitle());
             goalValueTextField.setText(Category.formatGoal(category.getGoal()));
 
-            goalsPanel.add(categoryNameTextField);
-            goalsPanel.add(goalTypeCombo);
-            goalsPanel.add(goalValueTextField);
+            panelGoals.add(categoryNameTextField);
+            panelGoals.add(goalTypeCombo);
+            panelGoals.add(goalValueTextField);
         }
     }
 
+    //helper that finds an object in a list of objects and returns its position (or -1)
     public static int findIndexOf(Object o, List list) {
         if (o == null) {
             return -1;
@@ -183,7 +137,7 @@ public class GUI {
     }
 
     private void createUrlsPanel() {
-        urlsPanel.removeAll();
+        panelUrls.removeAll();
         ArrayList<Category> categories = (ArrayList) this.db.getCategories();
 
         Vector categoryModel = new Vector();
@@ -204,8 +158,8 @@ public class GUI {
                 System.out.println(url.getTitle() + category);
                 db.changeUrlCategory(url, category);
             });
-            urlsPanel.add(urlTextField);
-            urlsPanel.add(categoryCombo);
+            panelUrls.add(urlTextField);
+            panelUrls.add(categoryCombo);
         }
     }
 
@@ -283,16 +237,17 @@ public class GUI {
     }
 
     private void createTrackerListener() {
-        post("/tracker", (Request request, Response response) -> {
-            String message = request.queryParams("message");
+        //create Spark http listener
+        post("/tracker", (Request request, Response response) -> { //Listen for POST HTTP request on localhost:4567/tracker
+            String message = request.queryParams("message"); //retrieve message from incoming request
             String[] parts = message.split(" ");
-            if (parts.length == 3 || parts.length == 2) {
+            if (parts.length == 3 || parts.length == 2) { //verify parsed message is the expected length
                 int ts = Integer.parseInt(parts[0]);
-                if (parts[1].equals("START")) {
+                if (parts[1].equals("START")) { //START message contains a timestamp and an url
                     String url = parts[2];
                     timer.startTimer(url, ts);
                 } else {
-                    timer.stopTimer(ts);
+                    timer.stopTimer(ts); //STOP message only contains a timestamp
                 }
             }
             response.status(201); // 201 Created
@@ -300,13 +255,64 @@ public class GUI {
         });
     }
 
+    //Creates UI Components and needs to be called before frame.pack()
+    private void createUIComponents() {
+        //Navigation panel behavior
+        navigationPanel.addChangeListener(e -> {
+            // 0 = Main, 1 = Stats, 2 = Settings, 3 = Categories, 4 = URLs, 5 = goals
+            switch (navigationPanel.getSelectedIndex()) {
+                case 1:
+                    panelStatistics.removeAll();
+                    panelStatistics.add(graphTest.redraw());
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    createGroupsPanel();
+                    break;
+                case 4:
+                    createUrlsPanel();
+                    break;
+                case 5:
+                    createGoalsPanel();
+                default:
+                    break;
+            }
+        });
+
+
+        //Start Button
+        btnStart.addActionListener(e -> {
+            String url = dummyUrl.getText();
+            if (!"".equals(url)) {
+                //When starting
+                if (btnStart.getText().equals("Start")){
+                    btnStart.setText("Stop");
+                    lstCatergory.setEnabled(false);
+                    timer.startTimer();
+                }
+                //When stopping
+                else{
+                    btnStart.setText("Start");
+                    timer.stopTimer(url);
+                    lstCatergory.setEnabled(true);
+                }
+            }
+        });
+
+        //Reset button on the setting panel
+        dataResetButton.addActionListener(e-> {
+            int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you wish to delete all data and reset the database?", "Delete all data", JOptionPane.YES_NO_OPTION);
+            if (dialogResult == JOptionPane.YES_OPTION) {
+                //Display user dialog and verify, that they wish to reset the database
+                db.resetDatabase();
+            }
+        });
+    }
+
     public static void main(String[] args){
         DBF db = new DBF();
         JFrameGraphTest graphTest = new JFrameGraphTest(db);
         new GUI(db, graphTest);
-    }
-
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
     }
 }
