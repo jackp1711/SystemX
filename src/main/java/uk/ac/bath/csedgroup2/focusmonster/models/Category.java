@@ -2,6 +2,8 @@ package uk.ac.bath.csedgroup2.focusmonster.models;
 
 import com.j256.ormlite.field.DatabaseField;
 
+import java.util.Vector;
+
 public class Category extends CommonModel {
     public static final boolean TYPE_LESS_THAN = false;
     public static final boolean TYPE_MORE_THAN = true;
@@ -93,5 +95,12 @@ public class Category extends CommonModel {
 
     public static int deformatTimestamp(String date) {
         return Integer.parseInt(date);
+    }
+
+    public static Vector<String> getGoalTypeVectors() {
+        Vector<String> goalTypesModel = new Vector<>();
+        goalTypesModel.add("<");
+        goalTypesModel.add(">");
+        return goalTypesModel;
     }
 }
