@@ -2,6 +2,7 @@ package uk.ac.bath.csedgroup2.focusmonster.models;
 
 import com.j256.ormlite.field.DatabaseField;
 
+import java.text.SimpleDateFormat;
 import java.util.Vector;
 
 public class Category extends CommonModel {
@@ -90,11 +91,11 @@ public class Category extends CommonModel {
     }
 
     public static String formatGoal(int seconds) {
-        return "" + seconds;
+        return "" + (seconds / 3600);
     }
 
-    public static int deformatTimestamp(String date) {
-        return Integer.parseInt(date);
+    public static int deformatTimestamp(String hours) {
+        return Integer.parseInt(hours) * 3600;
     }
 
     public static Vector<String> getGoalTypeVectors() {
