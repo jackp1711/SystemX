@@ -1,10 +1,9 @@
-package uk.ac.bath.csedgroup2.systemx;
+package uk.ac.bath.csedgroup2.focusmonster;
 
-import com.j256.ormlite.misc.SqlExceptionUtil;
 import spark.Request;
 import spark.Response;
-import uk.ac.bath.csedgroup2.systemx.models.Category;
-import uk.ac.bath.csedgroup2.systemx.models.Url;
+import uk.ac.bath.csedgroup2.focusmonster.models.Category;
+import uk.ac.bath.csedgroup2.focusmonster.models.Url;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

@@ -1,6 +1,6 @@
-package uk.ac.bath.csedgroup2.systemx;
+package uk.ac.bath.csedgroup2.focusmonster;
 
-import uk.ac.bath.csedgroup2.systemx.models.Category;
+import uk.ac.bath.csedgroup2.focusmonster.models.Category;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;

@@ -1,4 +1,4 @@
-package uk.ac.bath.csedgroup2.systemx;
+package uk.ac.bath.csedgroup2.focusmonster;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -8,9 +8,9 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import uk.ac.bath.csedgroup2.systemx.models.Category;
-import uk.ac.bath.csedgroup2.systemx.models.TimerEntry;
-import uk.ac.bath.csedgroup2.systemx.models.Url;
+import uk.ac.bath.csedgroup2.focusmonster.models.Category;
+import uk.ac.bath.csedgroup2.focusmonster.models.TimerEntry;
+import uk.ac.bath.csedgroup2.focusmonster.models.Url;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

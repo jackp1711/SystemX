@@ -1,4 +1,4 @@
-package uk.ac.bath.csedgroup2.systemx.models;
+package uk.ac.bath.csedgroup2.focusmonster.models;
 
 abstract class CommonModel {
 
