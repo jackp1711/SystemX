@@ -1,5 +1,6 @@
 *target*
 *.jar
+!/FocusMonster.jar
 *.war
 *.ear
 *.class
