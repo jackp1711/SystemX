@@ -15,14 +15,13 @@ import java.util.Vector;
 
 import static spark.Spark.post;
 
-public class GUI {
+public class FocusMonster {
     private JTabbedPane navigationPanel;
     private JPanel panelMain;
     private JPanel panelHomeScreen;
     private JPanel panelStatistics;
     private JPanel panelSettings;
     private JButton btnStart;
-    private JComboBox lstCatergory;
     private JTextField dummyUrl;
     private JPanel panelCategories;
     private JPanel panelUrls;
@@ -47,7 +46,7 @@ public class GUI {
         frame.setSize(600,500);
     }
 
-    public GUI(DBF db, JFrameGraphTest graphTest) {
+    public FocusMonster(DBF db, JFrameGraphTest graphTest) {
         this.graphTest = graphTest;
         this.db = db;
         this.timer = new Timer(db);
@@ -349,14 +348,12 @@ public class GUI {
                 //When starting
                 if (btnStart.getText().equals("Start")){
                     btnStart.setText("Stop");
-                    lstCatergory.setEnabled(false);
                     timer.startTimer();
                 }
                 //When stopping
                 else{
                     btnStart.setText("Start");
                     timer.stopTimer(url);
-                    lstCatergory.setEnabled(true);
                 }
             }
         });
@@ -374,6 +371,6 @@ public class GUI {
     public static void main(String[] args){
         DBF db = new DBF();
         JFrameGraphTest graphTest = new JFrameGraphTest(db);
-        new GUI(db, graphTest);
+        new FocusMonster(db, graphTest);
     }
 }

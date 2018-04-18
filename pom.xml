@@ -61,7 +61,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        uk.ac.bath.csedgroup2.focusmonster.GUI
+                                        uk.ac.bath.csedgroup2.focusmonster.FocusMonster
                                     </mainClass>
                                 </manifest>
                             </archive>
