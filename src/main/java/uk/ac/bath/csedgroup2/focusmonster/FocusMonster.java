@@ -30,7 +30,7 @@ public class FocusMonster {
 
     private DBF db;
     private Timer timer;
-    private JFrameGraphTest graphTest;
+    private JFrameGraph graphTest;
     private JFrame frame;
 
     private void createJFrame() {
@@ -46,7 +46,7 @@ public class FocusMonster {
         frame.setSize(600,500);
     }
 
-    public FocusMonster(DBF db, JFrameGraphTest graphTest) {
+    public FocusMonster(DBF db, JFrameGraph graphTest) {
         this.graphTest = graphTest;
         this.db = db;
         this.timer = new Timer(db);
@@ -370,7 +370,7 @@ public class FocusMonster {
 
     public static void main(String[] args){
         DBF db = new DBF();
-        JFrameGraphTest graphTest = new JFrameGraphTest(db);
+        JFrameGraph graphTest = new JFrameGraph(db);
         new FocusMonster(db, graphTest);
     }
 }
