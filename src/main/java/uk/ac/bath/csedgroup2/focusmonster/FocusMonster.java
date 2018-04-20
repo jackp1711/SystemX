@@ -30,7 +30,7 @@ public class FocusMonster {
 
     private DBF db;
     private Timer timer;
-    private JFrameGraph graphTest;
+    private JFrameGraph graphPackage;
     private JFrame frame;
 
     private void createJFrame() {
@@ -46,8 +46,8 @@ public class FocusMonster {
         frame.setSize(600,500);
     }
 
-    public FocusMonster(DBF db, JFrameGraph graphTest) {
-        this.graphTest = graphTest;
+    public FocusMonster(DBF db, JFrameGraph graphPackage) {
+        this.graphPackage = graphPackage;
         this.db = db;
         this.timer = new Timer(db);
         this.createTrackerListener();
@@ -323,7 +323,7 @@ public class FocusMonster {
             switch (navigationPanel.getSelectedIndex()) {
                 case 1:
                     panelStatistics.removeAll();
-                    panelStatistics.add(graphTest.redraw());
+                    panelStatistics.add(graphPackage.redraw());
                     break;
                 case 2:
                     break;
