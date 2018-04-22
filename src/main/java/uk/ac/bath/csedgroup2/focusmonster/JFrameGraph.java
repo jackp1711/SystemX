@@ -20,25 +20,25 @@ public class JFrameGraph extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private transient DBF db;
 
-	public ChartPanel redraw() {
-		return createPieChart("Your analytics since 4eva");
+
+	public ChartPanel redrawPieChart() {
+		return createPieChart("Total browsing analytics");
 	}
 
-	/*
-	public ChartPanel redraw(){
-		return createBarChart("Weekly productivity goals");
+	public ChartPanel redrawBarChart(){
+		return createBarChart("Total productivity goals");
 	}
-	*/
+
 
 	public ChartPanel createPieChart(String chartTitle){
 		PieDataset dataset = createPieDataset();
-		JFreeChart chart = createChart(dataset, chartTitle);
+		JFreeChart chart = createPieChart(dataset, chartTitle);
 		return new ChartPanel(chart);
 	}
 
 	public ChartPanel createBarChart(String chartTitle){
 		CategoryDataset dataset = createBarDataset();
-		JFreeChart chart = createChart(dataset, chartTitle);
+		JFreeChart chart = createBarChart(dataset, chartTitle);
 		return new ChartPanel(chart);
 	}
 	
@@ -56,33 +56,22 @@ public class JFrameGraph extends JFrame {
 	private CategoryDataset createBarDataset(){
 		DefaultCategoryDataset data = new DefaultCategoryDataset();
 
-		List<Category> categoryArrayList = this.db.getGroupedCategoriesSinceTime(0);
-		for (Category category : categoryArrayList){
-			data.addValue(category.getDuration(),"Current", category.getTitle());
+		List<Category> categoryArrayList = this.db.getGroupedCategoriesSinceTime(0);	//replace with Timer.getCurrentTimeStamp - 604800 for a week
+		for (Category category : categoryArrayList) {
+			data.addValue(category.getDuration(), "Current" , category.getTitle());
+			data.addValue(category.getGoal(), "Goal", category.getTitle());
+			System.out.println(category.getGoal());
 		}
-		/*
-		data.addValue(1.0, "Goal", "Monday");
-		data.addValue(2.0, "Actual", "Monday");
-
-		data.addValue(3.0, "Goal", "Tuesday");
-		data.addValue(2.0, "Actual", "Tuesday");
-
-		data.addValue(1.5, "Goal","Wednesday");
-		data.addValue(1.5, "Actual", "Wednesday");
-
-		data.addValue(2.0, "Goal", "Thursday");
-		data.addValue(0.5,"Actual", "Thursday");
-		*/
 		return data;
 	}
 
-	private JFreeChart createChart(CategoryDataset dataset, String title){
-		JFreeChart chart = ChartFactory.createBarChart(title, "Day", "Productive time (secs)", dataset);
+	private JFreeChart createBarChart(CategoryDataset dataset, String title){
+		JFreeChart chart = ChartFactory.createBarChart(title, "Category", "Productive time (secs)", dataset);
 		return chart;
 	}
 	
 
-	private JFreeChart createChart(PieDataset dataset, String title){
+	private JFreeChart createPieChart(PieDataset dataset, String title){
 		JFreeChart chart = ChartFactory.createPieChart(title, dataset, true, true, false);
 		PiePlot plot = (PiePlot) chart.getPlot();
 		plot.setStartAngle(290);

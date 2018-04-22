@@ -27,6 +27,7 @@ public class FocusMonster {
     private JPanel panelUrls;
     private JPanel panelGoals;
     private JButton dataResetButton;
+    private JPanel panelGoalsCharts;
 
     private DBF db;
     private Timer timer;
@@ -323,7 +324,7 @@ public class FocusMonster {
             switch (navigationPanel.getSelectedIndex()) {
                 case 1:
                     panelStatistics.removeAll();
-                    panelStatistics.add(graphPackage.redraw());
+                    panelStatistics.add(graphPackage.redrawPieChart());
                     break;
                 case 2:
                     break;
@@ -335,6 +336,11 @@ public class FocusMonster {
                     break;
                 case 5:
                     createGoalsPanel();
+                    break;
+                case 6:
+                    panelGoalsCharts.removeAll();
+                    panelGoalsCharts.add(graphPackage.redrawBarChart());
+                    break;
                 default:
                     break;
             }
