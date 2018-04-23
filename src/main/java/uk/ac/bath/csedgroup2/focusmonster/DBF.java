@@ -272,10 +272,17 @@ public class DBF {
     public List<Category> getGroupedCategoriesBetweenTimes(int from, int to) {
         ArrayList<Category> categoriesList = new ArrayList<>();
         try {
-            String query = "select category.title, sum(timerentry.duration) from main.timerentry left join url on url.title = timerentry.url_id left join category on url.category_id = category.id where timerentry.start > ? and timerentry.end < ? group by category.title;";
+            String query = "select category.title, sum(timerentry.duration), category.id, category.goal, category.goalType from main.timerentry left join url on url.title = timerentry.url_id left join category on url.category_id = category.id where timerentry.start > ? and timerentry.end < ? group by category.title;";
             GenericRawResults<Category> results = categoryDao.queryRaw(query, (String[] columnNames, String[] resultColumns) -> {
                 Category c = new Category();
-                c.setTitle(resultColumns[0] != null ? resultColumns[0] : "Others");
+                if (resultColumns[0] == null) {
+                    c = Category.createNullCategory();
+                } else {
+                    c.setTitle(resultColumns[0] != null ? resultColumns[0] : "Others");
+                    c.setId(resultColumns[2]);
+                    c.setGoal(Integer.parseInt(resultColumns[3]));
+                    c.setGoalType(Boolean.parseBoolean(resultColumns[4]));
+                }
                 c.setDuration(Integer.parseInt(resultColumns[1]));
                 return c;
             }, "" + from, "" + to);
