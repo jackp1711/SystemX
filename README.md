@@ -11,14 +11,15 @@ Download extension <a href="https://github.com/novotnej/tab_tracking/blob/master
 
 Run the FocusMonster.jar file and keep it running, if you wish to use the tab tracker
 
-#For developers
-##Installation
+# For developers
+
+## Installation
 
 1. Clone repository
 2. Install maven on your OS (if not previously installed)
 3. Create IntelliJ maven project and set to auto import dependencies
 
-##How to run sonarqube
+## How to run sonarqube
 
 run in terminal from within repository:
 
