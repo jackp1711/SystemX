@@ -99,6 +99,14 @@
             <border type="none" title=""/>
             <children/>
           </grid>
+          <grid id="95129" binding="panelGoalsCharts" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints>
+              <tabbedpane title="Goals Charts"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children/>
+          </grid>
         </children>
       </tabbedpane>
     </children>
