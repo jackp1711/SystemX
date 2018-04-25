@@ -1,9 +1,16 @@
 package uk.ac.bath.csedgroup2.focusmonster;
 
+import org.jfree.chart.annotations.CategoryLineAnnotation;
+import org.jfree.chart.plot.CategoryMarker;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.ValueMarker;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 import uk.ac.bath.csedgroup2.focusmonster.models.Category;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
