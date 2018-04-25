@@ -1,7 +1,16 @@
 package uk.ac.bath.csedgroup2.focusmonster;
 
+import org.jfree.chart.annotations.CategoryLineAnnotation;
+import org.jfree.chart.plot.CategoryMarker;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.ValueMarker;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 import uk.ac.bath.csedgroup2.focusmonster.models.Category;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -12,6 +21,7 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 
 
@@ -55,18 +65,18 @@ public class JFrameGraph extends JFrame {
 
 	private CategoryDataset createBarDataset(){
 		DefaultCategoryDataset data = new DefaultCategoryDataset();
-
-		List<Category> categoryArrayList = this.db.getGroupedCategoriesSinceTime(0);	//replace with Timer.getCurrentTimeStamp - 604800 for a week
+		this.db.generateSampleData();
+		List<Category> categoryArrayList = this.db.getGroupedCategoriesSinceTime(Timer.getCurrentTimestamp() - 604800);	//past week of data
 		for (Category category : categoryArrayList) {
-			data.addValue(category.getDuration(), "Current" , category.getTitle());
-			data.addValue(category.getGoal(), "Goal", category.getTitle());
-			System.out.println(category.getGoal());
+			data.addValue(category.getDuration()/3600, "Current" , category.getTitle());
+			data.addValue(category.getGoal()/3600, "Goal", category.getTitle());
+
 		}
 		return data;
 	}
 
 	private JFreeChart createBarChart(CategoryDataset dataset, String title){
-		JFreeChart chart = ChartFactory.createBarChart(title, "Category", "Productive time (secs)", dataset);
+		JFreeChart chart = ChartFactory.createBarChart(title, "Category", "Productive time (Hours)", dataset);
 		return chart;
 	}
 	
