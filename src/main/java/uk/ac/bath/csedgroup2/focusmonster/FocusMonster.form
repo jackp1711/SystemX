@@ -105,7 +105,20 @@
             </constraints>
             <properties/>
             <border type="none"/>
-            <children/>
+            <children>
+              <component id="c9599" class="javax.swing.JFormattedTextField" binding="goalLength">
+                <constraints/>
+                <properties>
+                  <text value="Show data for the past number of days : (Any non int returns 7 days)"/>
+                </properties>
+              </component>
+              <component id="ee951" class="javax.swing.JButton" binding="generateButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Generate"/>
+                </properties>
+              </component>
+            </children>
           </grid>
         </children>
       </tabbedpane>

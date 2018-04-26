@@ -8,11 +8,16 @@ import uk.ac.bath.csedgroup2.focusmonster.models.Url;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.NumberFormatter;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import static java.io.FileDescriptor.err;
 import static spark.Spark.post;
 
 public class FocusMonster {
@@ -28,6 +33,8 @@ public class FocusMonster {
     private JPanel panelGoals;
     private JButton dataResetButton;
     private JPanel panelGoalsCharts;
+    private JFormattedTextField goalLength;
+    private JButton generateButton;
 
     private DBF db;
     private Timer timer;
@@ -338,8 +345,7 @@ public class FocusMonster {
                     createGoalsPanel();
                     break;
                 case 6:
-                    panelGoalsCharts.removeAll();
-                    panelGoalsCharts.add(graphPackage.redrawBarChart());
+                    createGoalsDataPanel();
                     break;
                 default:
                     break;
@@ -370,6 +376,28 @@ public class FocusMonster {
             if (dialogResult == JOptionPane.YES_OPTION) {
                 //Display user dialog and verify, that they wish to reset the database
                 db.resetDatabase();
+            }
+        });
+    }
+
+    private void createGoalsDataPanel() {
+        panelGoalsCharts.removeAll();
+        panelGoalsCharts.add(goalLength);
+        panelGoalsCharts.add(generateButton);
+        generateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Clicked");
+                panelGoalsCharts.removeAll();
+                int dataDays;
+                try{
+                    dataDays = Integer.parseInt(goalLength.getText());
+                    panelGoalsCharts.add(graphPackage.redrawBarChart(dataDays));
+                }
+                catch(NumberFormatException e1){
+                    panelGoalsCharts.add(graphPackage.redrawBarChart(7));
+                }
+
             }
         });
     }

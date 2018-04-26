@@ -2,8 +2,6 @@ package uk.ac.bath.csedgroup2.focusmonster;
 
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.category.DefaultCategoryDataset;
 import uk.ac.bath.csedgroup2.focusmonster.models.Category;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -14,7 +12,6 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 
 
@@ -28,8 +25,8 @@ public class JFrameGraph extends JFrame {
 		return createPieChart("Total browsing analytics");
 	}
 
-	public ChartPanel redrawBarChart(){
-		return createBarChart("Total productivity goals");
+	public ChartPanel redrawBarChart(int time){
+		return createBarChart("Total productivity goals", time);
 	}
 
 
@@ -39,8 +36,8 @@ public class JFrameGraph extends JFrame {
 		return new ChartPanel(chart);
 	}
 
-	public ChartPanel createBarChart(String chartTitle){
-		CategoryDataset dataset = createBarDataset();
+	public ChartPanel createBarChart(String chartTitle, int time){
+		CategoryDataset dataset = createBarDataset(time);
 		JFreeChart chart = createBarChart(dataset, chartTitle);
 		return new ChartPanel(chart);
 	}
@@ -52,19 +49,19 @@ public class JFrameGraph extends JFrame {
 		for (Category category : categoryArrayList) {
 			data.setValue(category.getTitle(), category.getDuration());
 		}
-
 		return data;
 	}
 
-	private CategoryDataset createBarDataset(){
+	private CategoryDataset createBarDataset(int time){
 		DefaultCategoryDataset data = new DefaultCategoryDataset();
-		this.db.generateSampleData();
-		List<Category> categoryArrayList = this.db.getGroupedCategoriesSinceTime(Timer.getCurrentTimestamp() - 604800);	//past week of data
+		//this.db.generateSampleData();
+		List<Category> categoryArrayList = this.db.getGroupedCategoriesSinceTime(Timer.getCurrentTimestamp() - 86400*time);	//past week of data
 		for (Category category : categoryArrayList) {
 			data.addValue(category.getDuration()/3600, "Current" , category.getTitle());
 			data.addValue(category.getGoal()/3600, "Goal", category.getTitle());
 
 		}
+		System.out.println("Dataset generated");
 		return data;
 	}
 
