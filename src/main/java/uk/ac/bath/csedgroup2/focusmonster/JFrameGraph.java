@@ -6,39 +6,30 @@ import uk.ac.bath.csedgroup2.focusmonster.models.Category;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PiePlot;
-import org.jfree.chart.util.Rotation;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 
 import javax.swing.*;
 import java.util.List;
 
-
 public class JFrameGraph extends JFrame {
+
+	public JFrameGraph(){
+	}
 
 	private static final long serialVersionUID = 1L;
 	private transient DBF db;
 
 
-	public ChartPanel redrawPieChart() {
-		return createPieChart("Total browsing analytics");
-	}
-
-	public ChartPanel redrawBarChart(int time){
-		return createBarChart("Total productivity goals", time);
-	}
-
-
-	public ChartPanel createPieChart(String chartTitle){
+	public ChartPanel createPieChart(){
 		PieDataset dataset = createPieDataset();
-		JFreeChart chart = createPieChart(dataset, chartTitle);
+		JFreeChart chart = ChartFactory.createPieChart("Your browsing habits", dataset, true, true, false);
 		return new ChartPanel(chart);
 	}
 
-	public ChartPanel createBarChart(String chartTitle, int time){
+	public ChartPanel createBarChart(int time){
 		CategoryDataset dataset = createBarDataset(time);
-		JFreeChart chart = createBarChart(dataset, chartTitle);
+		JFreeChart chart = ChartFactory.createBarChart("Your goals", "Category", "Productive time (Hours)", dataset);
 		return new ChartPanel(chart);
 	}
 	
@@ -52,7 +43,7 @@ public class JFrameGraph extends JFrame {
 		return data;
 	}
 
-	private CategoryDataset createBarDataset(int time){
+	public CategoryDataset createBarDataset(int time){
 		DefaultCategoryDataset data = new DefaultCategoryDataset();
 		//this.db.generateSampleData();
 		List<Category> categoryArrayList = this.db.getGroupedCategoriesSinceTime(Timer.getCurrentTimestamp() - 86400*time);	//past week of data
@@ -61,23 +52,7 @@ public class JFrameGraph extends JFrame {
 			data.addValue(category.getGoal()/3600, "Goal", category.getTitle());
 
 		}
-		System.out.println("Dataset generated");
 		return data;
-	}
-
-	private JFreeChart createBarChart(CategoryDataset dataset, String title){
-		JFreeChart chart = ChartFactory.createBarChart(title, "Category", "Productive time (Hours)", dataset);
-		return chart;
-	}
-	
-
-	private JFreeChart createPieChart(PieDataset dataset, String title){
-		JFreeChart chart = ChartFactory.createPieChart(title, dataset, true, true, false);
-		PiePlot plot = (PiePlot) chart.getPlot();
-		plot.setStartAngle(290);
-		plot.setDirection(Rotation.CLOCKWISE);
-		plot.setForegroundAlpha(0.5f);
-		return chart;
 	}
 
 	public JFrameGraph(DBF db){

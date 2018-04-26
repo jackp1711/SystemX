@@ -38,6 +38,8 @@ public class FocusMonster {
 
     private DBF db;
     private Timer timer;
+    private PieMethods graphPackagePie;
+    private BarMethods graphPackageBar;
     private JFrameGraph graphPackage;
     private JFrame frame;
 
@@ -331,7 +333,7 @@ public class FocusMonster {
             switch (navigationPanel.getSelectedIndex()) {
                 case 1:
                     panelStatistics.removeAll();
-                    panelStatistics.add(graphPackage.redrawPieChart());
+                    panelStatistics.add(graphPackage.createPieChart());
                     break;
                 case 2:
                     break;
@@ -387,15 +389,14 @@ public class FocusMonster {
         generateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Clicked");
                 panelGoalsCharts.removeAll();
                 int dataDays;
                 try{
                     dataDays = Integer.parseInt(goalLength.getText());
-                    panelGoalsCharts.add(graphPackage.redrawBarChart(dataDays));
+                    panelGoalsCharts.add(graphPackage.createBarChart(dataDays));
                 }
                 catch(NumberFormatException e1){
-                    panelGoalsCharts.add(graphPackage.redrawBarChart(7));
+                    panelGoalsCharts.add(graphPackage.createBarChart(7));
                 }
 
             }
