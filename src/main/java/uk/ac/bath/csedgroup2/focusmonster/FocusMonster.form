@@ -106,10 +106,18 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="c9599" class="javax.swing.JFormattedTextField" binding="goalLength">
+              <component id="78b0a" class="javax.swing.JLabel">
                 <constraints/>
                 <properties>
                   <text value="Show data for the past number of days : (Any non int returns 7 days)"/>
+                </properties>
+              </component>
+              <component id="c9599" class="javax.swing.JFormattedTextField" binding="goalLength">
+                <constraints/>
+                <properties>
+                  <columns value="10"/>
+                  <doubleBuffered value="true"/>
+                  <text value="7"/>
                 </properties>
               </component>
               <component id="ee951" class="javax.swing.JButton" binding="generateButton" default-binding="true">
