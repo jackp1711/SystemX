@@ -38,8 +38,6 @@ public class FocusMonster {
 
     private DBF db;
     private Timer timer;
-    private PieMethods graphPackagePie;
-    private BarMethods graphPackageBar;
     private JFrameGraph graphPackage;
     private JFrame frame;
 
